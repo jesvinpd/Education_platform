@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import AIAssistant from "./AIAssistant";
 import "./css/Home.css";
 
 const Home = () => {
   const navigate = useNavigate();
+  const [showAssistant, setShowAssistant] = useState(false);
 
   return (
     <div className="home-root">
@@ -277,7 +279,10 @@ print(f"Indices: {result}")`}
         <div className="footer-bottom">
           © 2024 Friend of Engineer. All rights reserved.
         </div>
-        <button className="footer-chatbot-btn">
+        <button
+          className="footer-chatbot-btn"
+          onClick={() => setShowAssistant(true)}
+        >
           <svg width="28" height="28" fill="none" viewBox="0 0 24 24">
             <circle cx="14" cy="14" r="14" fill="#2563eb"/>
             <path d="M8 15v-2a4 4 0 018 0v2" stroke="#fff" strokeWidth="2" strokeLinecap="round"/>
@@ -286,6 +291,9 @@ print(f"Indices: {result}")`}
           </svg>
         </button>
       </footer>
+      {showAssistant && (
+        <AIAssistant onClose={() => setShowAssistant(false)} />
+      )}
     </div>
   );
 };
