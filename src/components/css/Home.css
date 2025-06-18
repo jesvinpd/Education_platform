@@ -185,3 +185,125 @@
   color: #fff;
   margin-top: 0;
 }
+.features-section {
+  background: #fff;
+  padding: 4rem 0 3rem 0;
+  text-align: center;
+}
+.features-title {
+  font-size: 2.3rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #111827;
+}
+.features-subtitle {
+  color: #6b7280;
+  font-size: 1.15rem;
+  margin-bottom: 2.5rem;
+}
+.features-cards {
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+  flex-wrap: wrap;
+}
+.feature-card {
+  background: #f5faff;
+  border-radius: 20px;
+  padding: 2.2rem 2rem 2rem 2rem;
+  width: 340px;
+  box-shadow: 0 2px 16px rgba(36, 99, 235, 0.04);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: box-shadow 0.2s;
+}
+.feature-card h3 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin: 1.2rem 0 0.7rem 0;
+  color: #111827;
+}
+.feature-card p {
+  color: #374151;
+  font-size: 1.05rem;
+  margin: 0;
+}
+.feature-icon {
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.feature-card.notes {
+  background: #e8f0fe;
+}
+.feature-card.coding {
+  background: #ecfdf5;
+}
+.feature-card.ai {
+  background: #faf5ff;
+}
+.notes-library-section {
+  background: #f9fafb;
+  padding: 4rem 0 3.5rem 0;
+  text-align: center;
+}
+.notes-library-title {
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #111827;
+  margin-bottom: 0.5rem;
+}
+.notes-library-subtitle {
+  color: #6b7280;
+  font-size: 1.15rem;
+  margin-bottom: 2.5rem;
+}
+.notes-library-cards {
+  display: flex;
+  justify-content: center;
+  gap: 2.2rem;
+  flex-wrap: wrap;
+}
+.notes-card {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 2px 16px rgba(36, 99, 235, 0.04);
+  padding: 2rem 2.2rem 1.5rem 2.2rem;
+  width: 270px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  transition: box-shadow 0.2s;
+}
+.notes-card:hover {
+  box-shadow: 0 4px 24px rgba(36, 99, 235, 0.10);
+}
+.notes-icon {
+  margin-bottom: 1.1rem;
+}
+.notes-card-title {
+  font-size: 1.18rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 0.4rem;
+  text-align: left;
+}
+.notes-card-desc {
+  color: #374151;
+  font-size: 1.01rem;
+  margin-bottom: 1.2rem;
+  text-align: left;
+}
+.notes-card-meta {
+  color: #6b7280;
+  font-size: 0.98rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.pdf-icon {
+  font-size: 1.1rem;
+}
