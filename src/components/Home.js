@@ -162,6 +162,130 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* Practice Coding Problems Section */}
+      <section className="practice-section">
+        <h2 className="practice-title">Practice Coding Problems</h2>
+        <p className="practice-subtitle">
+          LeetCode-style problems with built-in compiler
+        </p>
+        <div className="practice-content">
+          {/* Code Editor Card */}
+          <div className="practice-editor-card">
+            <div className="editor-header">
+              Code Editor
+              <select className="editor-lang" disabled>
+                <option>Python</option>
+              </select>
+            </div>
+            <pre className="editor-code">
+{`def two_sum(nums, target):
+    """
+    Given an array of integers nums and an integer target,
+    return indices of the two numbers such that they add up to target
+    """
+    hash_map = {}
+
+    for i, num in enumerate(nums):
+        complement = target - num
+        if complement in hash_map:
+            return [hash_map[complement], i]
+        hash_map[num] = i
+
+    return []
+
+# Test your solution
+nums = [2, 7, 11, 15]
+target = 9
+result = two_sum(nums, target)
+print(f"Indices: {result}")`}
+            </pre>
+            <div className="editor-actions">
+              <button className="run-btn">▶ Run Code</button>
+              <button className="submit-btn">Submit</button>
+            </div>
+          </div>
+          {/* Problem Card */}
+          <div className="practice-problem-card">
+            <div className="problem-header">
+              <span className="problem-title">1. Two Sum</span>
+              <span className="problem-difficulty easy">Easy</span>
+            </div>
+            <div className="problem-desc">
+              Given an array of integers <code>nums</code> and an integer <code>target</code>, return <i>indices of the two numbers such that they add up to target</i>.<br /><br />
+              <b>Example 1:</b>
+              <div className="problem-example">
+                <b>Input:</b> nums = [2,7,11,15], target = 9<br />
+                <b>Output:</b> [0,1]<br />
+                <b>Explanation:</b> Because nums[0] + nums[1] == 9, we return [0, 1].
+              </div>
+              <b>Constraints:</b>
+              <ul className="problem-constraints">
+                <li>2 ≤ nums.length ≤ 10⁴</li>
+                <li>-10⁹ ≤ nums[i] ≤ 10⁹</li>
+                <li>-10⁹ ≤ target ≤ 10⁹</li>
+                <li>Only one valid answer exists.</li>
+              </ul>
+              <b>Test Cases</b>
+              <ul className="problem-tests">
+                <li>Test 1: <span className="test-pass">✓ Passed</span></li>
+                <li>Test 2: <span className="test-pass">✓ Passed</span></li>
+                <li>Test 3: <span className="test-pending">- Pending</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Call to Action Section */}
+      <section className="cta-section">
+        <h2 className="cta-title">Ready to Excel in CSE?</h2>
+        <p className="cta-subtitle">
+          Join thousands of students already using Friend of Engineer to ace their studies.
+        </p>
+        <button className="cta-btn">Get Started for Free</button>
+      </section>
+
+      {/* Footer Section */}
+      <footer className="footer-section">
+        <div className="footer-content">
+          <div className="footer-col">
+            <div className="footer-title">Friend of Engineer</div>
+            <div className="footer-desc">Your ultimate CSE learning platform</div>
+          </div>
+          <div className="footer-col">
+            <div className="footer-title">Features</div>
+            <div className="footer-link">Notes Sharing</div>
+            <div className="footer-link">Coding Practice</div>
+            <div className="footer-link">AI Assistant</div>
+          </div>
+          <div className="footer-col">
+            <div className="footer-title">Subjects</div>
+            <div className="footer-link">Data Structures</div>
+            <div className="footer-link">Algorithms</div>
+            <div className="footer-link">Operating Systems</div>
+            <div className="footer-link">Database Systems</div>
+          </div>
+          <div className="footer-col">
+            <div className="footer-title">Support</div>
+            <div className="footer-link">Help Center</div>
+            <div className="footer-link">Contact Us</div>
+            <div className="footer-link">Community</div>
+          </div>
+        </div>
+        <hr className="footer-divider" />
+        <div className="footer-bottom">
+          © 2024 Friend of Engineer. All rights reserved.
+        </div>
+        <button className="footer-chatbot-btn">
+          <svg width="28" height="28" fill="none" viewBox="0 0 24 24">
+            <circle cx="14" cy="14" r="14" fill="#2563eb"/>
+            <path d="M8 15v-2a4 4 0 018 0v2" stroke="#fff" strokeWidth="2" strokeLinecap="round"/>
+            <circle cx="10" cy="11" r="1" fill="#fff"/>
+            <circle cx="14" cy="11" r="1" fill="#fff"/>
+          </svg>
+        </button>
+      </footer>
     </div>
   );
 };
