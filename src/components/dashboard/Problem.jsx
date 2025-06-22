@@ -10,6 +10,9 @@ const Problem = ({ problems }) => {
   const problem = problems.find(p => p.questionNo === parseInt(id));
   const [code, setCode] = useState('// Write your code here');
   const [activeTab, setActiveTab] = useState('description');
+  const [testResults, setTestResults] = useState(
+    problem.examples.map(() => ({ status: 'Pending', result: null }))
+  );
   
   if (!problem) return <div>Problem not found</div>;
 
@@ -23,6 +26,31 @@ const Problem = ({ problems }) => {
       backgroundColor: colors[difficulty],
       color: 'white'
     };
+  };
+
+  const simulateTestRun = () => {
+    setTestResults(prev => prev.map(result => ({
+      ...result,
+      status: 'Running'
+    })));
+
+    setTimeout(() => {
+      const simulatedResults = problem.examples.map((example, index) => {
+        const outcomes = ['Accepted', 'Wrong Answer', 'Time Limit Exceeded', 'Runtime Error'];
+        const randomOutcome = outcomes[Math.floor(Math.random() * outcomes.length)];
+        
+        return {
+          status: randomOutcome,
+          result: randomOutcome === 'Accepted' 
+            ? example.output 
+            : randomOutcome === 'Wrong Answer'
+              ? '[1,3]'
+              : null
+        };
+      });
+
+      setTestResults(simulatedResults);
+    }, 1500);
   };
 
   return (
@@ -135,7 +163,7 @@ const Problem = ({ problems }) => {
         </div>
 
         <div className="action-buttons">
-          <button className="run-button">Run</button>
+          <button className="run-button" onClick={simulateTestRun}>Run</button>
           <button className="submit-button">Submit</button>
         </div>
 
@@ -147,7 +175,12 @@ const Problem = ({ problems }) => {
             <div key={index} className="test-case">
               <div className="test-case-header">
                 <span>Test Case {index + 1}</span>
-                <span>Status: </span>
+                <div className="status-container">
+                  <span className="status-label">Status: </span>
+                  <span className={`test-status ${testResults[index].status.toLowerCase()}`}>
+                    {testResults[index].status}
+                  </span>
+                </div>
               </div>
               <div className="test-case-content">
                 <div className="test-case-input">
@@ -158,6 +191,12 @@ const Problem = ({ problems }) => {
                   <strong>Expected: </strong>
                   <code>{example.output}</code>
                 </div>
+                {testResults[index].result && (
+                  <div className="test-case-result">
+                    <strong>Your Output: </strong>
+                    <code>{testResults[index].result}</code>
+                  </div>
+                )}
               </div>
             </div>
           ))}
