@@ -1,0 +1,86 @@
+.practice-section-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.problems-header {
+  display: grid;
+  grid-template-columns: 80px 1fr 120px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+  font-weight: 600;
+  color: #343a40;
+}
+
+.problem-header-cell {
+  padding: 8px;
+}
+
+.problem-header-cell.title {
+  padding-left: 16px;
+}
+
+.problems-list {
+  max-height: calc(100vh - 250px);
+  overflow-y: auto;
+}
+
+.problem-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 120px;
+  padding: 16px;
+  border-bottom: 1px solid #e9ecef;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.problem-row:hover {
+  background-color: #f8f9fa;
+}
+
+.problem-cell {
+  padding: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.problem-cell.number {
+  color: #6c757d;
+  font-family: monospace;
+  font-size: 1.1rem;
+}
+
+.problem-cell.title {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.problem-title {
+  font-weight: 500;
+  color: #2d3436;
+}
+
+.problem-topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.topic-tag {
+  font-size: 0.8rem;
+  padding: 2px 8px;
+  border-radius: 12px;
+  background: #e9ecef;
+  color: #495057;
+}
+
+.difficulty-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: 1px solid;
+}
