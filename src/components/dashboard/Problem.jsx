@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import CodeMirror from '@uiw/react-codemirror';
-import { javascript } from '@codemirror/lang-javascript';
 import ReactMarkdown from 'react-markdown';
+import CodePanel from './CodePanel';
 import './css/Problem.css';
 
 const Problem = ({ problems }) => {
   const { id } = useParams();
   const problem = problems.find(p => p.questionNo === parseInt(id));
-  const [code, setCode] = useState('// Write your code here');
   const [activeTab, setActiveTab] = useState('description');
   const [testResults, setTestResults] = useState(
     problem.examples.map(() => ({ status: 'Pending', result: null }))
@@ -143,65 +141,11 @@ const Problem = ({ problems }) => {
       </div>
 
       {/* Right Panel - Code Editor */}
-      <div className="code-panel">
-        <div className="editor-header">
-          <select className="language-select">
-            <option value="javascript">JavaScript</option>
-            <option value="python">Python</option>
-            <option value="java">Java</option>
-          </select>
-        </div>
-
-        <div className="editor-container">
-          <CodeMirror
-            value={code}
-            height="400px"
-            theme="dark"
-            extensions={[javascript()]}
-            onChange={(value) => setCode(value)}
-          />
-        </div>
-
-        <div className="action-buttons">
-          <button className="run-button" onClick={simulateTestRun}>Run</button>
-          <button className="submit-button">Submit</button>
-        </div>
-
-        <div className="test-cases">
-          <div className="test-case-header">
-            <h3>Example Test Cases</h3>
-          </div>
-          {problem.examples.map((example, index) => (
-            <div key={index} className="test-case">
-              <div className="test-case-header">
-                <span>Test Case {index + 1}</span>
-                <div className="status-container">
-                  <span className="status-label">Status: </span>
-                  <span className={`test-status ${testResults[index].status.toLowerCase()}`}>
-                    {testResults[index].status}
-                  </span>
-                </div>
-              </div>
-              <div className="test-case-content">
-                <div className="test-case-input">
-                  <strong>Input: </strong>
-                  <code>{example.input}</code>
-                </div>
-                <div className="test-case-output">
-                  <strong>Expected: </strong>
-                  <code>{example.output}</code>
-                </div>
-                {testResults[index].result && (
-                  <div className="test-case-result">
-                    <strong>Your Output: </strong>
-                    <code>{testResults[index].result}</code>
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+      <CodePanel 
+        problem={problem}
+        testResults={testResults}
+        onRunCode={simulateTestRun}
+      />
     </div>
   );
 };

@@ -146,6 +146,7 @@ code {
 }
 
 .editor-container {
+  min-height: 50%;
   flex: 1;
   overflow: hidden;
 }
