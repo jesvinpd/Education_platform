@@ -41,6 +41,9 @@ const TestCases = ({
             className={`test-case-tab ${activeTestCase === `Case ${index + 1}` ? 'active' : ''}`}
             onClick={() => setActiveTestCase(`Case ${index + 1}`)}
           >
+            {testResults[index]?.status && (
+              <span className={`test-case-tab-light ${testResults[index].status.toLowerCase()}`}></span>
+            )}
             Case {index + 1}
           </button>
         ))}
@@ -50,6 +53,9 @@ const TestCases = ({
             className={`test-case-tab ${activeTestCase === `Case ${problem.examples.length + index + 1}` ? 'active' : ''}`}
             onClick={() => setActiveTestCase(`Case ${problem.examples.length + index + 1}`)}
           >
+            {testResults[problem.examples.length + index]?.status && (
+              <span className={`test-case-tab-light ${testResults[problem.examples.length + index].status.toLowerCase()}`}></span>
+            )}
             Case {problem.examples.length + index + 1}
           </button>
         ))}

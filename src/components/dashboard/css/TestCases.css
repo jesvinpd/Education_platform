@@ -25,11 +25,68 @@
   border-radius: 4px;
   font-size: 0.9rem;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+}
+
+.test-case-tab-light {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.test-case-tab-light.accepted {
+  background-color:rgb(14, 253, 101);
+  box-shadow: 0 0 4px rgba(134, 239, 172, 0.4);
+}
+
+.test-case-tab-light.wrong {
+  background-color:rgb(255, 18, 5);
+  box-shadow: 0 0 4px rgba(254, 202, 202, 0.4);
+}
+
+.test-case-tab-light.running {
+  background-color:rgb(14, 161, 241);
+  box-shadow: 0 0 4px rgba(186, 230, 253, 0.4);
+  animation: pulse 1.5s infinite;
+}
+
+.test-case-tab-light.time {
+  background-color:rgb(249, 202, 11);
+  box-shadow: 0 0 4px rgba(253, 230, 138, 0.4);
+}
+
+.test-case-tab-light.runtime {
+  background-color:rgb(251, 11, 199);
+  box-shadow: 0 0 4px rgba(252, 165, 165, 0.4);
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .test-case-tab.active {
   background: #2563eb;
   color: white;
+}
+
+.test-case-tab.active .test-case-tab-light {
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.4);
 }
 
 .add-test-case-btn {
@@ -122,12 +179,12 @@
 }
 
 .test-status.accepted {
-  background-color: #86efac;
+  background-color:rgb(9, 243, 95);
   color: #166534;
 }
 
 .test-status.wrong {
-  background-color: #fecaca;
+  background-color: red;
   color: #991b1b;
 }
 
