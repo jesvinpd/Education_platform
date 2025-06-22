@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import "./css/Dashboard.css";
-import { codingProblems} from '../dummyData';
+import codingProblems from "../dummyData";
 import PracticeSection from './dashboard/PracticeSection';
 import { useNavigate } from 'react-router-dom';
 

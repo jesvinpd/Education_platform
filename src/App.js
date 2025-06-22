@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./components/Home";
 import DashBoard from "./components/DashBoard";
 import Compiler from "./components/Compiler";
+import Problem from "./components/dashboard/Problem";
+import codingProblems from "./dummyData";
 
 function App() {
   return (
@@ -11,6 +13,10 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/compiler" element={<Compiler />} />
         <Route path="/dashboard" element={<DashBoard />} />
+        <Route
+          path="/problem/:id"
+          element={<Problem problems={codingProblems} />}
+        />
       </Routes>
     </Router>
   );

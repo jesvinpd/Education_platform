@@ -33,7 +33,7 @@ const PracticeSection = ({ problems }) => {
           >
             <div className="problem-cell number">{problem.questionNo}</div>
             <div className="problem-cell title">
-              <div className="problem-title">{problem.question.split(':')[0]}</div>
+              <div className="problem-title">{problem.title}</div>
               <div className="problem-topics">
                 {problem.topics.map((topic, index) => (
                   <span key={index} className="topic-tag">
