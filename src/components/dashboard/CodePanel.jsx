@@ -1,19 +1,42 @@
 import React, { useState } from 'react';
 import CodeMirror from '@uiw/react-codemirror';
-import { javascript } from '@codemirror/lang-javascript';
+import { python } from '@codemirror/lang-python';
+import { cpp } from '@codemirror/lang-cpp';
+import { java } from '@codemirror/lang-java';
 import TestCases from './TestCases';
 import './css/CodePanel.css';
 
 const CodePanel = ({ problem, testResults, onRunCode }) => {
-  const [code, setCode] = useState('// Write your code here');
+  const [language, setLanguage] = useState('cpp'); // Default to C++
+  const [code, setCode] = useState(problem.code.cpp); // Default to C++ code
   const [activeTestCase, setActiveTestCase] = useState('Case 1');
   const [customTestCases, setCustomTestCases] = useState([]);
+
+  const getLanguageExtension = (lang) => {
+    switch (lang) {
+      case 'python':
+        return python();
+      case 'cpp':
+      case 'c':
+        return cpp();
+      case 'java':
+        return java();
+      default:
+        return cpp();
+    }
+  };
+
+  const handleLanguageChange = (newLanguage) => {
+    setLanguage(newLanguage);
+    // Update code template based on selected language
+    setCode(problem.code[newLanguage] || '// Code template not available');
+  };
 
   const handleRunCode = () => {
     // Save custom test cases to testResults before running
     const allTestCases = [
       ...problem.examples,
-      ...customTestCases.filter(tc => tc.input.trim() && tc.output.trim()) // Only save non-empty test cases
+      ...customTestCases.filter(tc => tc.input.trim() && tc.output.trim())
     ];
     
     // Update testResults with all test cases
@@ -23,11 +46,15 @@ const CodePanel = ({ problem, testResults, onRunCode }) => {
   return (
     <div className="code-panel">
       <div className="editor-header">
-        <select className="language-select">
+        <select 
+          className="language-select"
+          value={language}
+          onChange={(e) => handleLanguageChange(e.target.value)}
+        >
           <option value="c">C</option>
+          <option value="cpp">C++</option>
           <option value="python">Python</option>
           <option value="java">Java</option>
-          <option value="c++">C++</option>
         </select>
       </div>
 
@@ -36,7 +63,7 @@ const CodePanel = ({ problem, testResults, onRunCode }) => {
           value={code}
           height="400px"
           theme="dark"
-          extensions={[javascript()]}
+          extensions={[getLanguageExtension(language)]}
           onChange={(value) => setCode(value)}
         />
       </div>

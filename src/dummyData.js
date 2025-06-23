@@ -31,6 +31,13 @@ You can return the answer in any order.`,
     difficultyLevel: "Easy",
     topics: ["Array", "Hash Table"],
     hint: "Try using a hash map to store the complement of each number you've seen so far.",
+    code: {
+  cpp: "class Solution {\npublic:\n    vector<int> twoSum(vector<int>& nums, int target) {\n        \n    }\n};",
+  python: "class Solution:\n    def twoSum(self, nums: List[int], target: int) -> List[int]:\n        ",
+  c: "int* twoSum(int* nums, int numsSize, int target, int* returnSize) {\n    \n}",
+  java: "class Solution {\n    public int[] twoSum(int[] nums, int target) {\n        \n    }\n}"
+},
+
   },
   {
     questionNo: 2,
