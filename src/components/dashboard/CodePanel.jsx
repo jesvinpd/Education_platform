@@ -7,8 +7,8 @@ import TestCases from './TestCases';
 import './css/CodePanel.css';
 
 const CodePanel = ({ problem, testResults, onRunCode }) => {
-  const [language, setLanguage] = useState('cpp'); // Default to C++
-  const [code, setCode] = useState(problem.code.cpp); // Default to C++ code
+  const [language, setLanguage] = useState('c'); // Default to C++
+  const [code, setCode] = useState(problem.code.c); // Default to C++ code
   const [activeTestCase, setActiveTestCase] = useState('Case 1');
   const [customTestCases, setCustomTestCases] = useState([]);
 
@@ -53,7 +53,7 @@ const CodePanel = ({ problem, testResults, onRunCode }) => {
         >
           <option value="c">C</option>
           <option value="cpp">C++</option>
-          <option value="python">Python</option>
+          <option value="python">Python3</option>
           <option value="java">Java</option>
         </select>
       </div>
