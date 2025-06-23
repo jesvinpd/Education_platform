@@ -128,23 +128,30 @@
 
 .test-case-panel textarea {
   width: 100%;
-  min-height: 80px;
+  height: 60px;
   padding: 8px;
   background-color: #282828;
   border: 1px solid #374151;
   border-radius: 4px;
   color: white;
   font-family: monospace;
-  resize: vertical;
+  resize: none;
+  line-height: 1.5;
+  font-size: 14px;
 }
 
 .test-case-panel pre {
-  background-color: #282828;
-  padding: 8px;
-  border-radius: 4px;
-  overflow-x: auto;
+  height: 60px;
   margin: 0;
+  padding: 8px;
+  background-color: #282828;
+  border: 1px solid #374151;
+  border-radius: 4px;
   font-family: monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  overflow-y: auto;
+  white-space: pre-wrap;
 }
 
 .status-container {

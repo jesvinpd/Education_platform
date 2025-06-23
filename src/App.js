@@ -5,6 +5,7 @@ import DashBoard from "./components/DashBoard";
 import Compiler from "./components/Compiler";
 import Problem from "./components/dashboard/Problem";
 import codingProblems from "./dummyData";
+import PracticeSection from "./components/dashboard/PracticeSection";
 
 function App() {
   return (
@@ -12,7 +13,11 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/compiler" element={<Compiler />} />
-        <Route path="/dashboard" element={<DashBoard />} />
+        <Route path="/dashboard" element={<DashBoard />}>
+          <Route index element={<div>Dashboard Content</div>} />
+          <Route path="notes" element={<div>Notes Content</div>} />
+          <Route path="practice" element={<PracticeSection problems={codingProblems} />} />
+        </Route>
         <Route
           path="/problem/:id"
           element={<Problem problems={codingProblems} />}

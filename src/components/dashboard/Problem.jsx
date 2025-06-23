@@ -26,21 +26,23 @@ const Problem = ({ problems }) => {
     };
   };
 
-  const simulateTestRun = () => {
-    setTestResults(prev => prev.map(result => ({
-      ...result,
-      status: 'Running'
+  const simulateTestRun = (allTestCases) => {
+    // Set all test cases to running state
+    setTestResults(allTestCases.map(() => ({
+      status: 'Running',
+      result: null
     })));
 
+    // Simulate test execution
     setTimeout(() => {
-      const simulatedResults = problem.examples.map((example, index) => {
+      const simulatedResults = allTestCases.map((testCase, index) => {
         const outcomes = ['Accepted', 'Wrong Answer', 'Time Limit Exceeded', 'Runtime Error'];
         const randomOutcome = outcomes[Math.floor(Math.random() * outcomes.length)];
         
         return {
           status: randomOutcome,
           result: randomOutcome === 'Accepted' 
-            ? example.output 
+            ? testCase.output 
             : randomOutcome === 'Wrong Answer'
               ? '[1,3]'
               : null

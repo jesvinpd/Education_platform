@@ -12,7 +12,7 @@ const TestCases = ({
   const addNewTestCase = () => {
     const newCaseNumber = customTestCases.length + problem.examples.length + 1;
     const newTestCase = {
-      input: '',
+      input: '', // Default template based on problem format
       output: '',
       isCustom: true
     };
