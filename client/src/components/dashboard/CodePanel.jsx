@@ -48,7 +48,6 @@ const CodePanel = ({ problem, testResults, onRunCode }) => {
       <div className="editor-header">
         <select 
           className="language-select"
-          value={language}
           onChange={(e) => handleLanguageChange(e.target.value)}
         >
           <option value="c">C</option>
