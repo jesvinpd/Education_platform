@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import { python } from '@codemirror/lang-python';
 import { cpp } from '@codemirror/lang-cpp';
 import { java } from '@codemirror/lang-java';
 import TestCases from './TestCases';
 import './css/CodePanel.css';
+import { testConnection } from '../../services/api';
 
 const CodePanel = ({ problem, testResults, onRunCode }) => {
   const [language, setLanguage] = useState('c'); // Default to C++
@@ -42,6 +43,19 @@ const CodePanel = ({ problem, testResults, onRunCode }) => {
     // Update testResults with all test cases
     onRunCode(allTestCases);
   };
+
+  useEffect(() => {
+    const testServer = async () => {
+      try {
+        const response = await testConnection();
+        console.log('Server connection successful:', response.data);
+      } catch (error) {
+        console.error('Server connection failed:', error);
+      }
+    };
+    
+    testServer();
+  }, []);
 
   return (
     <div className="code-panel">
