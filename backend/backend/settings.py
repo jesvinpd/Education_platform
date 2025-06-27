@@ -109,7 +109,7 @@ USE_TZ = True
 
 
 # Static files
-STATIC_URL = 'static/'
+STATIC_URL = 'static/' 
 
 # Media files (notes PDFs etc.)
 MEDIA_URL = '/media/'
