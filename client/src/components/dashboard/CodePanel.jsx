@@ -74,7 +74,7 @@ const CodePanel = ({ problem, testResults, onRunCode }) => {
       <div className="editor-container">
         <CodeMirror
           value={code}
-          height="400px"
+          height="100%"
           theme="dark"
           extensions={[getLanguageExtension(language)]}
           onChange={(value) => setCode(value)}
