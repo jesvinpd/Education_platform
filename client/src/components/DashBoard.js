@@ -68,7 +68,7 @@ const DashBoard = () => {
       {/* Main Content */}
       <div className="dashboard-content">
         <div className="dashboard-header">
-          <h1>{activeOption}</h1>
+          {activeOption !== "notes" && <h1>{activeOption}</h1>}
         </div>
         <div className="dashboard-main">
           <Outlet />
