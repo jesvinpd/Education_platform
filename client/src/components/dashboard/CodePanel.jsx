@@ -5,7 +5,7 @@ import { cpp } from '@codemirror/lang-cpp';
 import { java } from '@codemirror/lang-java';
 import TestCases from './TestCases';
 import './css/CodePanel.css';
-import { testConnection } from '../../services/api';
+import { testConnection, executeCode } from '../../services/api';
 
 const CodePanel = ({ problem, testResults, onRunCode }) => {
   const [language, setLanguage] = useState('c'); // Default to C++
@@ -32,17 +32,37 @@ const CodePanel = ({ problem, testResults, onRunCode }) => {
     // Update code template based on selected language
     setCode(problem.code[newLanguage] || '// Code template not available');
   };
-
-  const handleRunCode = () => {
-    // Save custom test cases to testResults before running
-    const allTestCases = [
-      ...problem.examples,
-      ...customTestCases.filter(tc => tc.input.trim() && tc.output.trim())
-    ];
-    
-    // Update testResults with all test cases
-    onRunCode(allTestCases);
+  
+  const handleRunCode = async () => {
+    try {
+      console.log('Running code in language:', language);
+      console.log('Code to execute:', code);
+      
+      const result = await executeCode(language, code);
+      
+      // Log all the important information
+      console.log('Execution Results:');
+      console.log('Status:', result.status?.description);
+      console.log('Output:', result.stdout);
+      console.log('Error:', result.stderr);
+      console.log('Compile Output:', result.compile_output);
+      console.log('Execution Time:', result.time, 'seconds');
+      console.log('Memory Used:', result.memory, 'KB');
+      
+    } catch (error) {
+      console.error('Failed to execute code:', error);
+    }
   };
+  // const handleRunCode = () => {
+  //   // Save custom test cases to testResults before running
+  //   const allTestCases = [
+  //     ...problem.examples,
+  //     ...customTestCases.filter(tc => tc.input.trim() && tc.output.trim())
+  //   ];
+    
+  //   // Update testResults with all test cases
+  //   onRunCode(allTestCases);
+  // };
 
   useEffect(() => {
     const testServer = async () => {
