@@ -7,7 +7,7 @@ import TestCases from './TestCases';
 import './css/CodePanel.css';
 import { testConnection, executeCode } from '../../services/api';
 
-const CodePanel = ({ problem, testResults, onRunCode }) => {
+const CodePanel = ({ problem, testResults, setTestResults, onRunCode }) => {
   const [language, setLanguage] = useState('c'); // Default to C++
   const [code, setCode] = useState(problem.code.c); // Default to C++ code
   const [activeTestCase, setActiveTestCase] = useState('Case 1');
@@ -35,19 +35,44 @@ const CodePanel = ({ problem, testResults, onRunCode }) => {
   
   const handleRunCode = async () => {
     try {
-      console.log('Running code in language:', language);
-      console.log('Code to execute:', code);
-      
-      const result = await executeCode(language, code);
-      
-      // Log all the important information
-      console.log('Execution Results:');
-      console.log('Status:', result.status?.description);
-      console.log('Output:', result.stdout);
-      console.log('Error:', result.stderr);
-      console.log('Compile Output:', result.compile_output);
-      console.log('Execution Time:', result.time, 'seconds');
-      console.log('Memory Used:', result.memory, 'KB');
+      // Get the current problem's test cases
+      const testCases = problem.examples.map(example => {
+        // Parse the input string to get nums and target
+        // Example input string: "nums = [2,7,11,15], target = 9"
+        const inputStr = example.input;
+        
+        // Extract nums array using regex
+        const numsMatch = inputStr.match(/nums\s*=\s*\[(.*?)\]/);
+        const nums = numsMatch ? `[${numsMatch[1]}]` : '[]';
+        
+        // Extract target using regex
+        const targetMatch = inputStr.match(/target\s*=\s*(\d+)/);
+        const target = targetMatch ? targetMatch[1] : '0';
+        
+        return {
+          input: { 
+            nums: JSON.parse(nums), 
+            target: parseInt(target) 
+          },
+          expectedOutput: JSON.parse(example.output)
+        };
+      });
+
+      // Run each test case
+      for (let i = 0; i < testCases.length; i++) {
+        console.log(`Running test case ${i + 1}`);
+        
+        const result = await executeCode(language, code, testCases[i]);
+        console.log("result is: ",result);
+       
+        if (result) {
+        // Update the test results
+        testResults[i] = result.description;
+        }
+        
+      }
+      setTestResults(testResults);
+      console.log(testResults);
       
     } catch (error) {
       console.error('Failed to execute code:', error);
@@ -68,13 +93,13 @@ const CodePanel = ({ problem, testResults, onRunCode }) => {
     const testServer = async () => {
       try {
         const response = await testConnection();
-        console.log('Server connection successful:', response.data);
+        console.log('Server connection successful: ', response.data);
       } catch (error) {
-        console.error('Server connection failed:', error);
+        console.error('Server connection failed: ', error);
       }
     };
     
-    testServer();
+    //testServer();
   }, []);
 
   return (

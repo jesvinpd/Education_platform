@@ -146,6 +146,7 @@ const Problem = ({ problems }) => {
       <CodePanel 
         problem={problem}
         testResults={testResults}
+        setTestResults={setTestResults}
         onRunCode={simulateTestRun}
       />
     </div>

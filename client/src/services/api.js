@@ -23,7 +23,7 @@ api.interceptors.request.use((config) => {
 
 // Example API methods
 export const testConnection = () => api.get("/test");
-export const submitCode = (data) => api.post("/submissions", data);
+export const submitCode = (data) => api.post("/submit", data);
 export const getProblems = () => api.get("/problems");
 
 const JUDGE0_API_URL = process.env.REACT_APP_JUDGE0_API_URL; // Replace with your Judge0 API URL
@@ -47,30 +47,48 @@ const judge0Api = axios.create({
   },
 });
 
+// C language boilerplate code
+const C_BOILERPLATE =
+  '#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <stdbool.h>\n\n// two sum function declarations\n/* {{USER_CODE}} */\n\nint main() {\n    int n;\n    scanf("%d", &n);  // Read array size\n\n    int* nums = (int*)malloc(n * sizeof(int));\n\n    for(int i = 0; i < n; i++) {\n        scanf("%d", &nums[i]);\n    }\n\n    int target;\n    scanf("%d", &target);  // Read target value\n\n    int returnSize;\n    int* result = twoSum(nums, n, target, &returnSize);\n\n    printf("[");\n    for (int i = 0; i < returnSize-1; i++) {\n        printf("%d,", result[i]);\n    }\n    printf("%d]", result[returnSize-1]);\n\n    free(nums);\n    free(result);\n\n    return 0;\n}';
+
 // Execute code function
-export const executeCode = async (language, sourceCode, input = '') => {
+export const executeCode = async (language, sourceCode, testCase) => {
   try {
-    console.log('Submitting code for execution...');
-    
-    // Create submission
+    // Prepare the code based on language
+    let preparedCode;
+    if (language === 'c') {
+      preparedCode = C_BOILERPLATE.replace('/* {{USER_CODE}} */', sourceCode);
+    } else {
+      preparedCode = sourceCode;
+    }
+
+    // Format the input according to the boilerplate
+    const formattedInput = language === 'c'
+      ? `${testCase.input.nums.length}\n${testCase.input.nums.join(' ')}\n${testCase.input.target}`
+      : `${JSON.stringify(testCase.input.nums)}\n${testCase.input.target}`;
+
+    // Send plain UTF-8, no base64, no JSON.stringify
     const submission = await judge0Api.post('/submissions', {
-      source_code: sourceCode,
+      source_code: preparedCode,
+      stdin: formattedInput,
       language_id: LANGUAGE_IDS[language],
-      //stdin: input,
+      expected_output: testCase.expectedOutput
     });
 
     const token = submission.data.token;
-    console.log('Submission token:', token);
 
     // Poll for result
     let result;
     do {
-      await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 second
+      await new Promise(resolve => setTimeout(resolve, 1000));
       result = await judge0Api.get(`/submissions/${token}`);
-      console.log('Checking submission status:', result.data.status?.description);
     } while (result.data.status?.description === 'Processing');
 
-    return result.data;
+    // Log and return result with comparison
+    console.log("result is from api.js: ",result.data.status);
+    return {
+      ...result.data.status
+    };
   } catch (error) {
     console.error('Code execution error:', error);
     throw error;
