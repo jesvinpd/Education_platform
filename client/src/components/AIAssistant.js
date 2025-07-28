@@ -1,9 +1,24 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import "./css/AIAssistant.css";
 
 const AIAssistant = ({ onClose }) => {
+  const popupRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (popupRef.current && !popupRef.current.contains(event.target)) {
+        onClose();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [onClose]);
+
   return (
-    <div className="ai-assistant-popup">
+    <div className="ai-assistant-popup" ref={popupRef}>
       <div className="ai-assistant-header">
         AI Assistant
         <button className="ai-assistant-close" onClick={onClose}>×</button>
