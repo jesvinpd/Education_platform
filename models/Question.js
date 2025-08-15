@@ -1,7 +1,10 @@
 const mongoose = require("mongoose");
 
 const questionSchema = new mongoose.Schema({
-
+   questionNumber: {
+    type: Number,
+    unique: true
+  },
   title: String,
   description: String,
   difficultyLevel: { type: String, enum: ['Easy', 'Medium', 'Hard'] },
@@ -37,7 +40,14 @@ const questionSchema = new mongoose.Schema({
     default: null
   }
 });
-
+// Auto-generate questionNumber before saving
+questionSchema.pre("save", async function (next) {
+  if (this.isNew) {
+    const lastQuestion = await mongoose.model("Question").findOne().sort({ questionNumber: -1 });
+    this.questionNumber = lastQuestion ? lastQuestion.questionNumber + 1 : 1;
+  }
+  next();
+});
 module.exports = mongoose.model("Question", questionSchema);
 // This schema defines the structure of a question document in MongoDB.
 // It includes fields for title, description, difficulty level, tags, submission counts, and the creator's identifier.
