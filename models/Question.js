@@ -4,8 +4,14 @@ const questionSchema = new mongoose.Schema({
 
   title: String,
   description: String,
-  difficulty: { type: String, enum: ['Easy', 'Medium', 'Hard'] },
-  tags: [String],
+  difficultyLevel: { type: String, enum: ['Easy', 'Medium', 'Hard'] },
+   languages: {
+    c: { type: String, default: "" },      // Boilerplate for C
+    cpp: { type: String, default: "" },    // Boilerplate for C++
+    java: { type: String, default: "" },   // Boilerplate for Java
+    python: { type: String, default: "" }  // Boilerplate for Python ✅
+  },
+ topics : [String],
   totalSubmissions: { type: Number, default: 0 },
   successfulSubmissions: { type: Number, default: 0 },
    testCases: [
