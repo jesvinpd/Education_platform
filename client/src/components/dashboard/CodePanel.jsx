@@ -1,38 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import { python } from '@codemirror/lang-python';
-import { cpp } from '@codemirror/lang-cpp';
-import { java } from '@codemirror/lang-java';
 import TestCases from './TestCases';
 import './css/CodePanel.css';
-import { testConnection, executeCode } from '../../services/api';
+import { testConnection, runTestCases } from '../../services/api';
 
 const CodePanel = ({ problem, testResults, setTestResults, onRunCode }) => {
-  const [language, setLanguage] = useState('c'); // Default to C++
-  const [code, setCode] = useState(problem.code.c); // Default to C++ code
+  const [language] = useState('python'); // Fixed to Python only
+  const [code, setCode] = useState(problem.code.python); // Default to Python
   const [activeTestCase, setActiveTestCase] = useState('Case 1');
   const [customTestCases, setCustomTestCases] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const getLanguageExtension = (lang) => {
-    switch (lang) {
-      case 'python':
-        return python();
-      case 'cpp':
-      case 'c':
-        return cpp();
-      case 'java':
-        return java();
-      default:
-        return cpp();
-    }
+  const getLanguageExtension = () => {
+    return python(); // Only Python support
   };
 
-  const handleLanguageChange = (newLanguage) => {
-    setLanguage(newLanguage);
-    // Update code template based on selected language
-    setCode(problem.code[newLanguage] || '// Code template not available');
-  };
-  
   const handleRunCode = async () => {
     try {
       // Get the current problem's test cases
@@ -58,36 +41,45 @@ const CodePanel = ({ problem, testResults, setTestResults, onRunCode }) => {
         };
       });
 
-      // Run each test case
-      for (let i = 0; i < testCases.length; i++) {
-        console.log(`Running test case ${i + 1}`);
-        
-        const result = await executeCode(language, code, testCases[i]);
-        console.log("result is: ",result);
-       
-        if (result) {
-        // Update the test results
-        testResults[i] = result.description;
-        }
-        
-      }
-      setTestResults(testResults);
-      console.log(testResults);
+      // Add custom test cases if any
+      const customParsedTestCases = customTestCases
+        .filter(tc => tc.input.trim() && tc.output.trim())
+        .map(tc => {
+          try {
+            // Parse custom test case input
+            const inputStr = tc.input;
+            const numsMatch = inputStr.match(/nums\s*=\s*\[(.*?)\]/) || inputStr.match(/\[(.*?)\]/);
+            const nums = numsMatch ? `[${numsMatch[1]}]` : tc.input;
+            
+            const targetMatch = inputStr.match(/target\s*=\s*(\d+)/) || inputStr.match(/\n(\d+)/) || inputStr.match(/,\s*(\d+)/);
+            const target = targetMatch ? targetMatch[1] : '0';
+            
+            return {
+              input: {
+                nums: JSON.parse(nums),
+                target: parseInt(target)
+              },
+              expectedOutput: JSON.parse(tc.output)
+            };
+          } catch (error) {
+            console.error('Error parsing custom test case:', error);
+            return null;
+          }
+        })
+        .filter(tc => tc !== null);
+
+      const allTestCases = [...testCases, ...customParsedTestCases];
+
+      // Run all test cases using the new API
+      const results = await runTestCases(code, allTestCases, setTestResults, setLoading);
+      
+      console.log('Test results:', results);
       
     } catch (error) {
       console.error('Failed to execute code:', error);
+      setLoading(false);
     }
   };
-  // const handleRunCode = () => {
-  //   // Save custom test cases to testResults before running
-  //   const allTestCases = [
-  //     ...problem.examples,
-  //     ...customTestCases.filter(tc => tc.input.trim() && tc.output.trim())
-  //   ];
-    
-  //   // Update testResults with all test cases
-  //   onRunCode(allTestCases);
-  // };
 
   useEffect(() => {
     const testServer = async () => {
@@ -99,7 +91,8 @@ const CodePanel = ({ problem, testResults, setTestResults, onRunCode }) => {
       }
     };
     
-    //testServer();
+    // Uncomment to test server connection
+    // testServer();
   }, []);
 
   return (
@@ -107,12 +100,10 @@ const CodePanel = ({ problem, testResults, setTestResults, onRunCode }) => {
       <div className="editor-header">
         <select 
           className="language-select"
-          onChange={(e) => handleLanguageChange(e.target.value)}
+          value={language}
+          disabled // Disabled since we only support Python
         >
-          <option value="c">C</option>
-          <option value="cpp">C++</option>
           <option value="python">Python3</option>
-          <option value="java">Java</option>
         </select>
       </div>
 
@@ -121,13 +112,19 @@ const CodePanel = ({ problem, testResults, setTestResults, onRunCode }) => {
           value={code}
           height="100%"
           theme="dark"
-          extensions={[getLanguageExtension(language)]}
+          extensions={[getLanguageExtension()]}
           onChange={(value) => setCode(value)}
         />
       </div>
 
       <div className="action-buttons">
-        <button className="run-button" onClick={handleRunCode}>Run</button>
+        <button 
+          className="run-button" 
+          onClick={handleRunCode}
+          disabled={loading}
+        >
+          {loading ? 'Running...' : 'Run'}
+        </button>
         <button className="submit-button">Submit</button>
       </div>
 
@@ -138,6 +135,7 @@ const CodePanel = ({ problem, testResults, setTestResults, onRunCode }) => {
         activeTestCase={activeTestCase}
         setActiveTestCase={setActiveTestCase}
         setCustomTestCases={setCustomTestCases}
+        loading={loading}
       />
     </div>
   );
