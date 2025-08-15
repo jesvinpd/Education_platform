@@ -5,6 +5,10 @@ module.exports = {
   webpack: {
     configure: (webpackConfig) => {
       webpackConfig.output.publicPath = "auto";
+       webpackConfig.module.rules.push({
+         test: /\.txt$/,
+         use: "raw-loader",
+       });
       return webpackConfig;
     },
     plugins: {

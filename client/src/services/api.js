@@ -13,7 +13,7 @@ const api = axios.create({
 
 // Add request interceptor if needed
 api.interceptors.request.use((config) => {
-  // Add auth token if needed
+  // Add auth token if needed 
   const token = localStorage.getItem("token");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -26,73 +26,178 @@ export const testConnection = () => api.get("/test");
 export const submitCode = (data) => api.post("/submit", data);
 export const getProblems = () => api.get("/problems");
 
-const JUDGE0_API_URL = process.env.REACT_APP_JUDGE0_API_URL; // Replace with your Judge0 API URL
-const JUDGE0_API_KEY = process.env.REACT_APP_JUDGE0_API_KEY; // Replace with your Judge0 API Key
+// Piston API configuration
+const PISTON_API_URL = "https://emkc.org/api/v2/piston";
 
-// Language IDs for Judge0
-const LANGUAGE_IDS = {
-  c: 50,      // C (GCC 9.2.0)
-  cpp: 54,    // C++ (GCC 9.2.0)
-  python: 71, // Python (3.8.1)
-  java: 62,   // Java (OpenJDK 13.0.1)
-};
-
-// Judge0 API instance
-const judge0Api = axios.create({
-  baseURL: JUDGE0_API_URL,
+// Create Piston API instance
+const pistonApi = axios.create({
+  baseURL: PISTON_API_URL,
   headers: {
-    'X-RapidAPI-Key': JUDGE0_API_KEY,
-    'X-RapidAPI-Host': 'judge0-ce.p.rapidapi.com',
     'Content-Type': 'application/json',
   },
 });
 
-// C language boilerplate code
-const C_BOILERPLATE =
-  '#include <stdio.h>\n#include <stdlib.h>\n#include <string.h>\n#include <stdbool.h>\n\n// two sum function declarations\n/* {{USER_CODE}} */\n\nint main() {\n    int n;\n    scanf("%d", &n);  // Read array size\n\n    int* nums = (int*)malloc(n * sizeof(int));\n\n    for(int i = 0; i < n; i++) {\n        scanf("%d", &nums[i]);\n    }\n\n    int target;\n    scanf("%d", &target);  // Read target value\n\n    int returnSize;\n    int* result = twoSum(nums, n, target, &returnSize);\n\n    printf("[");\n    for (int i = 0; i < returnSize-1; i++) {\n        printf("%d,", result[i]);\n    }\n    printf("%d]", result[returnSize-1]);\n\n    free(nums);\n    free(result);\n\n    return 0;\n}';
+// Python boilerplate template - fixed to handle both class methods and standalone functions
+const PYTHON_BOILERPLATE = `import sys
+import json
+from typing import List
 
-// Execute code function
-export const executeCode = async (language, sourceCode, testCase) => {
+#{{USER_CODE}}#
+
+if __name__ == "__main__":
+    nums = json.loads(sys.stdin.readline())
+    target = int(sys.stdin.readline().strip())
+    
+    # Check if twoSum is defined as a class method or standalone function
+    try:
+        # Try calling as standalone function first
+        result = twoSum(nums, target)
+    except NameError:
+        # If that fails, try creating a Solution instance and calling the method
+        try:
+            solution = Solution()
+            result = solution.twoSum(nums, target)
+        except:
+            # If both fail, there's an error in the user's code
+            result = []
+    except:
+        result = []
+    
+    sys.stdout.write(json.dumps(result, separators=(',',':')))`;
+
+// Function to clean and prepare user code
+const prepareUserCode = (sourceCode) => {
+  // Remove any self parameter and convert to standalone function if needed
+  let cleanedCode = sourceCode;
+  
+  // Check if the function has 'self' parameter
+  if (cleanedCode.includes('def twoSum(self,')) {
+    // Create a Solution class and also a standalone function
+    cleanedCode = `class Solution:
+    ${cleanedCode.replace(/^/gm, '    ')}
+
+# Create standalone function for easier testing
+def twoSum(nums, target):
+    solution = Solution()
+    return solution.twoSum(nums, target)`;
+  }
+  
+  return cleanedCode;
+};
+
+// Get file extension for language
+const getExtension = (language) => {
+  switch (language) {
+    case 'python':
+      return 'py';
+    default:
+      return 'py';
+  }
+};
+
+// Execute code using Piston API
+export const executeCode = async (sourceCode, testCase) => {
   try {
-    // Prepare the code based on language
-    let preparedCode;
-    if (language === 'c') {
-      preparedCode = C_BOILERPLATE.replace('/* {{USER_CODE}} */', sourceCode);
-    } else {
-      preparedCode = sourceCode;
-    }
+    // Prepare and clean the user code
+    const cleanedCode = prepareUserCode(sourceCode);
+    
+    // Prepare the code by replacing the placeholder with user code
+    const preparedCode = PYTHON_BOILERPLATE.replace('#{{USER_CODE}}#', cleanedCode);
+    
+    // Format input for the test case
+    const formattedInput = `${JSON.stringify(testCase.input.nums)}\n${testCase.input.target}`;
+    
+    console.log('Executing code with input:', formattedInput);
+    console.log('Prepared code:', preparedCode);
 
-    // Format the input according to the boilerplate
-    const formattedInput = language === 'c'
-      ? `${testCase.input.nums.length}\n${testCase.input.nums.join(' ')}\n${testCase.input.target}`
-      : `${JSON.stringify(testCase.input.nums)}\n${testCase.input.target}`;
-
-    // Send plain UTF-8, no base64, no JSON.stringify
-    const submission = await judge0Api.post('/submissions', {
-      source_code: preparedCode,
-      stdin: formattedInput,
-      language_id: LANGUAGE_IDS[language],
-      expected_output: testCase.expectedOutput
+    // Execute code using Piston API
+    const response = await pistonApi.post('/execute', {
+      language: 'python',
+      version: '*', // Use latest version
+      files: [{
+        name: 'main.py',
+        content: preparedCode
+      }],
+      stdin: formattedInput
     });
 
-    const token = submission.data.token;
-
-    // Poll for result
-    let result;
-    do {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      result = await judge0Api.get(`/submissions/${token}`);
-    } while (result.data.status?.description === 'Processing');
-
-    // Log and return result with comparison
-    console.log("result is from api.js: ",result.data.status);
+    console.log('Piston API response:', response.data);
+    
+    const { run } = response.data;
+    const actualOutput = (run.stdout || '').trim();
+    const errorOutput = (run.stderr || '').trim();
+    
+    // Determine if the test passed
+    const expectedOutput = JSON.stringify(testCase.expectedOutput);
+    const passed = actualOutput === expectedOutput;
+    
     return {
-      ...result.data.status
+      stdout: actualOutput,
+      stderr: errorOutput,
+      passed,
+      expected: expectedOutput,
+      actual: actualOutput,
+      status: errorOutput ? 'Runtime Error' : (passed ? 'Accepted' : 'Wrong Answer'),
+      compile_output: run.output || '',
+      runtime: run.runtime || 0
     };
+    
   } catch (error) {
     console.error('Code execution error:', error);
-    throw error;
+    return {
+      stdout: '',
+      stderr: error.message || 'Execution failed',
+      passed: false,
+      expected: JSON.stringify(testCase.expectedOutput),
+      actual: 'Error',
+      status: 'Error',
+      compile_output: '',
+      runtime: 0
+    };
   }
+};
+
+// Run multiple test cases
+export const runTestCases = async (sourceCode, testCases, setResults, setLoading) => {
+  setLoading(true);
+  const newResults = [];
+
+  for (let i = 0; i < testCases.length; i++) {
+    const testCase = testCases[i];
+    try {
+      const result = await executeCode(sourceCode, testCase);
+      
+      newResults.push({
+        testCase: i + 1,
+        input: testCase.input,
+        expected: result.expected,
+        actual: result.actual,
+        passed: result.passed,
+        status: result.status,
+        stdout: result.stdout,
+        stderr: result.stderr,
+        runtime: result.runtime
+      });
+      
+    } catch (error) {
+      console.error(`Error in test case ${i + 1}:`, error);
+      newResults.push({
+        testCase: i + 1,
+        input: testCase.input,
+        expected: JSON.stringify(testCase.expectedOutput),
+        actual: 'Error',
+        passed: false,
+        status: 'Error',
+        stdout: '',
+        stderr: error.message || 'Unknown error',
+        runtime: 0
+      });
+    }
+  }
+
+  setResults(newResults);
+  setLoading(false);
+  return newResults;
 };
 
 export default api;

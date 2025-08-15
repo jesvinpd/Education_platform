@@ -32,12 +32,18 @@ You can return the answer in any order.`,
     topics: ["Array", "Hash Table"],
     hint: "Try using a hash map to store the complement of each number you've seen so far.",
     code: {
-  cpp: "class Solution {\npublic:\n    vector<int> twoSum(vector<int>& nums, int target) {\n        \n    }\n};",
-  python: "class Solution:\n    def twoSum(self, nums: List[int], target: int) -> List[int]:\n        ",
-  c: "int* twoSum(int* nums, int numsSize, int target, int* returnSize) {\n    \n}",
-  java: "class Solution {\n    public int[] twoSum(int[] nums, int target) {\n        \n    }\n}"
-},
-
+      python: `def twoSum(nums, target):
+    # Write your solution here
+    # Example approach:
+    # num_map = {}
+    # for i, num in enumerate(nums):
+    #     complement = target - num
+    #     if complement in num_map:
+    #         return [num_map[complement], i]
+    #     num_map[num] = i
+    # return []
+    pass`,
+    },
   },
   {
     questionNo: 2,
@@ -73,6 +79,11 @@ An input string is valid if:
     difficultyLevel: "Easy",
     topics: ["String", "Stack"],
     hint: "Use a stack to keep track of opening brackets and match them with closing brackets.",
+    code: {
+      python: `def isValid(s):
+    # Write your solution here
+    pass`,
+    },
   },
   {
     questionNo: 3,
@@ -100,6 +111,11 @@ Return the maximum profit you can achieve from this transaction. If you cannot a
     difficultyLevel: "Easy",
     topics: ["Array", "Dynamic Programming"],
     hint: "Keep track of the minimum price seen so far and calculate profit at each step.",
+    code: {
+      python: `def maxProfit(prices):
+    # Write your solution here
+    pass`,
+    },
   },
   {
     questionNo: 4,
@@ -131,6 +147,11 @@ Return the head of the merged linked list.`,
     difficultyLevel: "Easy",
     topics: ["Linked List", "Recursion"],
     hint: "Use a dummy node to simplify the merging process and compare values iteratively.",
+    code: {
+      python: `def mergeTwoLists(list1, list2):
+    # Write your solution here
+    pass`,
+    },
   },
   {
     questionNo: 5,
@@ -159,6 +180,11 @@ A **subarray** is a contiguous non-empty sequence of elements within an array.`,
     difficultyLevel: "Medium",
     topics: ["Array", "Dynamic Programming", "Divide and Conquer"],
     hint: "Use Kadane's algorithm - keep track of the maximum sum ending at current position.",
+    code: {
+      python: `def maxSubArray(nums):
+    # Write your solution here
+    pass`,
+    },
   },
   {
     questionNo: 6,
@@ -182,6 +208,11 @@ A **subarray** is a contiguous non-empty sequence of elements within an array.`,
     difficultyLevel: "Easy",
     topics: ["Array", "Hash Table", "Sorting"],
     hint: "Use a hash set to track seen elements, or sort the array and check adjacent elements.",
+    code: {
+      python: `def containsDuplicate(nums):
+    # Write your solution here
+    pass`,
+    },
   },
   {
     questionNo: 7,
@@ -206,6 +237,11 @@ An **Anagram** is a word or phrase formed by rearranging the letters of a differ
     difficultyLevel: "Easy",
     topics: ["Hash Table", "String", "Sorting"],
     hint: "Count the frequency of each character in both strings or sort both strings and compare.",
+    code: {
+      python: `def isAnagram(s, t):
+    # Write your solution here
+    pass`,
+    },
   },
   {
     questionNo: 8,
@@ -234,6 +270,11 @@ You must write an algorithm with \`O(log n)\` runtime complexity.`,
     difficultyLevel: "Easy",
     topics: ["Array", "Binary Search"],
     hint: "Use two pointers (left and right) and repeatedly divide the search space in half.",
+    code: {
+      python: `def search(nums, target):
+    # Write your solution here
+    pass`,
+    },
   },
   {
     questionNo: 9,
@@ -259,6 +300,11 @@ Each time you can either climb 1 or 2 steps. In how many distinct ways can you c
     difficultyLevel: "Easy",
     topics: ["Math", "Dynamic Programming", "Memoization"],
     hint: "This is essentially a Fibonacci sequence. The number of ways to reach step n is the sum of ways to reach step n-1 and n-2.",
+    code: {
+      python: `def climbStairs(n):
+    # Write your solution here
+    pass`,
+    },
   },
   {
     questionNo: 10,
@@ -285,6 +331,11 @@ Each time you can either climb 1 or 2 steps. In how many distinct ways can you c
     difficultyLevel: "Easy",
     topics: ["Linked List", "Recursion"],
     hint: "Use three pointers: previous, current, and next. Iteratively reverse the links between nodes.",
+    code: {
+      python: `def reverseList(head):
+    # Write your solution here
+    pass`,
+    },
   },
 ];
 
