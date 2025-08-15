@@ -1,7 +1,7 @@
 const axios = require("axios");
 const Question = require("../models/Question");
 const Submission = require("../models/Submission");
-const UserStats = require("../models/UserStats");
+const UserStats = require("../models/UserStat");
 
 exports.submitCode = async (req, res) => {
   try {

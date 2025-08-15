@@ -1,5 +1,5 @@
-const Question = require('../models/Question');
-
+const Question = require("../models/Question");
+const cloudinary = require("../config/cloudinary");
 
 exports.createQuestion = async (req, res) => {
   try {
@@ -8,27 +8,58 @@ exports.createQuestion = async (req, res) => {
       description,
       difficulty,
       tags,
-      testCases,        // Optional: allow creating with test cases
-      examples,         // New: e.g., [{ input: "2", output: "4" }]
-      constraints,      // New: e.g., ["1 <= n <= 1000"]
-      hints             // New: e.g., ["Try sorting", "Use hash map"]
-    } = req.body;
-
-    const question = new Question({
-      title,
-      description,
-      difficulty,
-      tags,
       testCases,
       examples,
       constraints,
       hints
-    });
+    } = req.body;
 
-    await question.save();
-    res.status(201).json(question);
+    let imageUrl = null;
+
+    // ✅ Upload directly to Cloudinary if file exists
+    if (req.file) {
+      const uploadResult = await cloudinary.uploader.upload_stream(
+        { folder: "questions" },
+        (error, result) => {
+          if (error) {
+            console.error("Cloudinary upload error:", error);
+            return res.status(500).json({ message: "Image upload failed" });
+          }
+
+          imageUrl = result.secure_url;
+
+          // Create question only after upload completes
+          saveQuestion();
+        }
+      );
+
+      // Pipe file buffer to Cloudinary upload
+      uploadResult.end(req.file.buffer);
+    } else {
+      // If no image, save directly
+      saveQuestion();
+    }
+
+    // Function to save the question in DB
+    async function saveQuestion() {
+      const question = new Question({
+        title,
+        description,
+        difficulty,
+        tags,
+        testCases,
+        examples,
+        constraints,
+        hints,
+        image: photoUrl
+      });
+
+      await question.save();
+      res.status(201).json(question);
+    }
+
   } catch (err) {
-    console.error("Error creating question:", err);
+    console.error(err);
     res.status(500).json({ message: "Failed to create question", error: err.message });
   }
 };

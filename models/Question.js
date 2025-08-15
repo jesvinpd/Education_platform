@@ -25,7 +25,11 @@ const questionSchema = new mongoose.Schema({
   constraints: [String], // e.g., ["1 <= n <= 1000", "Time limit: 1s"]
 
   // ✅ Add hints (optional tips for the user)
-  hints: [String] // e.g., ["Try using a hash map", "Think about sorting first"]
+  hints: [String], // e.g., ["Try using a hash map", "Think about sorting first"]
+  image: {
+    type: String, // URL to image
+    default: null
+  }
 });
 
 module.exports = mongoose.model("Question", questionSchema);
