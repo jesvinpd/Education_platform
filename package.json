@@ -1,21 +1,19 @@
 {
-  "name": "education-platform",
+  "name": "server",
   "version": "1.0.0",
-  "private": true,
-  "workspaces": [
-    "client",
-    "server"
-  ],
+  "main": "server.js",
   "scripts": {
-    "client": "cd client && npm start",
-    "server": "cd server && npm run dev",
-    "dev": "concurrently \"npm run client\" \"npm run server\""
-  },
-  "devDependencies": {
-    "concurrently": "^8.2.2"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "dependencies": {
+    "cloudinary": "^2.7.0",
     "cors": "^2.8.5",
-    "express": "^5.1.0"
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "multer": "^2.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
   }
 }
