@@ -55,8 +55,8 @@ if __name__ == "__main__":
     except NameError:
         # If that fails, try creating a Solution instance and calling the method
         try:
-            solution = Solution()
-            result = solution.twoSum(nums, target)
+            
+            result = twoSum(nums, target)
         except:
             # If both fail, there's an error in the user's code
             result = []
@@ -65,25 +65,7 @@ if __name__ == "__main__":
     
     sys.stdout.write(json.dumps(result, separators=(',',':')))`;
 
-// Function to clean and prepare user code
-const prepareUserCode = (sourceCode) => {
-  // Remove any self parameter and convert to standalone function if needed
-  let cleanedCode = sourceCode;
-  
-  // Check if the function has 'self' parameter
-  if (cleanedCode.includes('def twoSum(self,')) {
-    // Create a Solution class and also a standalone function
-    cleanedCode = `class Solution:
-    ${cleanedCode.replace(/^/gm, '    ')}
 
-# Create standalone function for easier testing
-def twoSum(nums, target):
-    solution = Solution()
-    return solution.twoSum(nums, target)`;
-  }
-  
-  return cleanedCode;
-};
 
 // Get file extension for language
 const getExtension = (language) => {
@@ -98,11 +80,9 @@ const getExtension = (language) => {
 // Execute code using Piston API
 export const executeCode = async (sourceCode, testCase) => {
   try {
-    // Prepare and clean the user code
-    const cleanedCode = prepareUserCode(sourceCode);
     
     // Prepare the code by replacing the placeholder with user code
-    const preparedCode = PYTHON_BOILERPLATE.replace('#{{USER_CODE}}#', cleanedCode);
+    const preparedCode = PYTHON_BOILERPLATE.replace('#{{USER_CODE}}#', sourceCode);
     
     // Format input for the test case
     const formattedInput = `${JSON.stringify(testCase.input.nums)}\n${testCase.input.target}`;

@@ -34,15 +34,7 @@ You can return the answer in any order.`,
     code: {
       python: `def twoSum(nums, target):
     # Write your solution here
-    # Example approach:
-    # num_map = {}
-    # for i, num in enumerate(nums):
-    #     complement = target - num
-    #     if complement in num_map:
-    #         return [num_map[complement], i]
-    #     num_map[num] = i
-    # return []
-    pass`,
+    return [0,1]`,
     },
   },
   {
@@ -82,7 +74,7 @@ An input string is valid if:
     code: {
       python: `def isValid(s):
     # Write your solution here
-    pass`,
+    return [0,1]`,
     },
   },
   {
