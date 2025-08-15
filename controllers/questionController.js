@@ -6,8 +6,8 @@ exports.createQuestion = async (req, res) => {
     const {
       title,
       description,
-      difficulty,
-      tags,
+      difficultyLevel,
+      topics,
       testCases,
       examples,
       constraints,
@@ -45,8 +45,8 @@ exports.createQuestion = async (req, res) => {
       const question = new Question({
         title,
         description,
-        difficulty,
-        tags,
+        difficultyLevel,
+        topics,
         testCases,
         examples,
         constraints,
