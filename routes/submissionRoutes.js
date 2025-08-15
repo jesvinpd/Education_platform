@@ -1,11 +1,13 @@
 const express = require('express');
 const { submitCode , getSubmissions , runOnly} = require('../controllers/submissionController');
 
+const auth = require("../middleware/auth"); 
+const role = require("../middleware/role");
 const router = express.Router();
 
-router.post('/submit', submitCode);
-router.get('/', getSubmissions); // supports ?userId=123&questionId=456
-router.post('/run', runOnly); // This route is for running code submissions
+router.post('/submit', auth, role("admin", "teacher", "student"), submitCode);
+router.get('/', auth, role("admin"),getSubmissions); // supports ?userId=123&questionId=456
+router.post('/run', auth, role("admin", "teacher", "student"), runOnly); // This route is for running code submissions
 
 module.exports = router;
 // This code sets up the routes for handling submission-related requests in the application.

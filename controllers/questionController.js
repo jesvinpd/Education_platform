@@ -11,58 +11,51 @@ exports.createQuestion = async (req, res) => {
       testCases,
       examples,
       constraints,
-      hints
+      hints,
+      languages
     } = req.body;
 
     let imageUrl = null;
 
-    // ✅ Upload directly to Cloudinary if file exists
+    // ✅ Handle Cloudinary upload if image exists
     if (req.file) {
-      const uploadResult = await cloudinary.uploader.upload_stream(
-        { folder: "questions" },
-        (error, result) => {
-          if (error) {
-            console.error("Cloudinary upload error:", error);
-            return res.status(500).json({ message: "Image upload failed" });
+      imageUrl = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: "questions" },
+          (error, result) => {
+            if (error) return reject(error);
+            resolve(result.secure_url);
           }
-
-          imageUrl = result.secure_url;
-
-          // Create question only after upload completes
-          saveQuestion();
-        }
-      );
-
-      // Pipe file buffer to Cloudinary upload
-      uploadResult.end(req.file.buffer);
-    } else {
-      // If no image, save directly
-      saveQuestion();
-    }
-
-    // Function to save the question in DB
-    async function saveQuestion() {
-      const question = new Question({
-        title,
-        description,
-        difficultyLevel,
-        topics,
-        testCases,
-        examples,
-        constraints,
-        hints,
-        image: photoUrl
+        );
+        stream.end(req.file.buffer);
       });
-
-      await question.save();
-      res.status(201).json(question);
     }
 
+    // ✅ Create question
+    const question = new Question({
+      title,
+      description,
+      difficultyLevel,
+      topics,
+      testCases,
+      examples,
+      constraints,
+      hints,
+      languages,
+      image: imageUrl
+    });
+
+    await question.save(); // triggers questionNumber + boilerplate defaults
+
+    res.status(201).json(question);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Failed to create question", error: err.message });
+    console.error("Error creating question:", err);
+    res.status(500).json({ msg: "Server error" });
   }
 };
+
+
+ 
 
 exports.getQuestions = async (req, res) => {
   try {
