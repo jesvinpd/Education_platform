@@ -1,13 +1,13 @@
 import React, { lazy, Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./components/Home";
-import DashBoard from "./components/DashBoard";
+import Dashboard from "./components/DashBoard";
 import Problem from "./components/dashboard/Problem";
 import QuestionUpload from "./components/QuestionUpload";
 import codingProblems from "./dummyData";
 import PracticeSection from "./components/dashboard/PracticeSection";
 import AdminSignup from "./AdminSignup";
-
+import PrivateRoute from "./components/PrivateRoute";
 
 // ✅ Import from src directly (not components)
 import Login from "./Login";
@@ -30,7 +30,11 @@ function App() {
 <Route path="/admin/signup" element={<AdminSignup />} />
         
         <Route path="/question-upload" element={<QuestionUpload />} />
-        <Route path="/dashboard" element={<DashBoard />}>
+        <Route path="/dashboard" element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          }>
           <Route index element={<div>Dashboard Content</div>} />
           <Route
             path="notes"
