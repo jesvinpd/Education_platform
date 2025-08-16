@@ -22,6 +22,9 @@ const Home = () => {
           <a href="#">Notes</a>
           <a href="#">Coding</a>
           <a href="#">Practice</a>
+          <a href="#" onClick={() => navigate("/question-upload")}>
+            Question Upload
+          </a>
         </nav>
         <button className="sign-in-btn" onClick={() => navigate("/compiler")}>
           Sign In

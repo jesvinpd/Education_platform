@@ -3,16 +3,19 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./components/Home";
 import DashBoard from "./components/DashBoard";
 import Problem from "./components/dashboard/Problem";
+import QuestionUpload from "./components/QuestionUpload";
 import codingProblems from "./dummyData";
 import PracticeSection from "./components/dashboard/PracticeSection";
 
 // Lazy load remote components
 const NotesApp = lazy(() => import("notesApp/NotesApp"));
+
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/question-upload" element={<QuestionUpload />} />
         <Route path="/dashboard" element={<DashBoard />}>
           <Route index element={<div>Dashboard Content</div>} />
           <Route

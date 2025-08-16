@@ -11,56 +11,70 @@ exports.createQuestion = async (req, res) => {
       testCases,
       examples,
       constraints,
-      hints
-    } = req.body;
+      hints,
+      languages
+    } = req.body; 
 
     let imageUrl = null;
 
+    // Parse JSON strings if they exist
+    const parsedTopics = topics ? JSON.parse(topics) : [];
+    const parsedTestCases = testCases ? JSON.parse(testCases) : [];
+    const parsedExamples = examples ? JSON.parse(examples) : [];
+    const parsedConstraints = constraints ? JSON.parse(constraints) : [];
+    const parsedHints = hints ? JSON.parse(hints) : [];
+    const parsedLanguages = languages ? JSON.parse(languages) : {};
+
     // ✅ Upload directly to Cloudinary if file exists
     if (req.file) {
-      const uploadResult = await cloudinary.uploader.upload_stream(
-        { folder: "questions" },
-        (error, result) => {
-          if (error) {
-            console.error("Cloudinary upload error:", error);
-            return res.status(500).json({ message: "Image upload failed" });
+      console.log("📸 Uploading image to Cloudinary...");
+      const uploadResult = await new Promise((resolve, reject) => {
+        cloudinary.uploader.upload_stream(
+          { folder: "questions" },
+          (error, result) => {
+            if (error) {
+              console.error("Cloudinary upload error:", error);
+              reject(error);
+            } else {
+              console.log("✅ Image uploaded successfully:", result.secure_url);
+              resolve(result);
+            }
           }
-
-          imageUrl = result.secure_url;
-
-          // Create question only after upload completes
-          saveQuestion();
-        }
-      );
-
-      // Pipe file buffer to Cloudinary upload
-      uploadResult.end(req.file.buffer);
-    } else {
-      // If no image, save directly
-      saveQuestion();
-    }
-
-    // Function to save the question in DB
-    async function saveQuestion() {
-      const question = new Question({
-        title,
-        description,
-        difficultyLevel,
-        topics,
-        testCases,
-        examples,
-        constraints,
-        hints,
-        image: photoUrl
+        ).end(req.file.buffer);
       });
 
-      await question.save();
-      res.status(201).json(question);
+      imageUrl = uploadResult.secure_url;
     }
 
+    // Save question to database (this happens whether there's an image or not)
+    const question = new Question({
+      title,
+      description,
+      difficultyLevel,
+      topics: parsedTopics,
+      testCases: parsedTestCases,
+      examples: parsedExamples,
+      constraints: parsedConstraints,
+      hints: parsedHints,
+      languages: parsedLanguages,
+      image: imageUrl // This will be the Cloudinary URL or null
+    });
+
+    const savedQuestion = await question.save();
+    console.log("✅ Question saved successfully:", savedQuestion._id);
+    console.log("🖼️ Image URL saved:", imageUrl);
+
+    res.status(201).json({
+      message: "Question created successfully",
+      question: savedQuestion
+    });
+
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Failed to create question", error: err.message });
+    console.error("❌ Error creating question:", err);
+    res.status(500).json({ 
+      message: "Failed to create question", 
+      error: err.message 
+    });
   }
 };
 
@@ -69,7 +83,7 @@ exports.getQuestions = async (req, res) => {
     const { difficulty, search } = req.query;
     const query = {};
 
-    if (difficulty) query.difficulty = difficulty;
+    if (difficulty) query.difficultyLevel = difficulty;
     if (search) query.title = { $regex: search, $options: 'i' };
 
     const questions = await Question.find(query);

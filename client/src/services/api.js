@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = process.env.REACT_APP_BACKEND_API_URL; // Replace with your backend API URL
+const API_BASE_URL = process.env.REACT_APP_BACKEND_API_URL || "http://localhost:5000/api"; // Replace with your backend API URL
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -25,6 +25,18 @@ api.interceptors.request.use((config) => {
 export const testConnection = () => api.get("/test");
 export const submitCode = (data) => api.post("/submit", data);
 export const getProblems = () => api.get("/problems");
+
+// Question API methods
+export const createQuestion = (formData) => {
+  return api.post("/questions/create", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
+
+export const getQuestions = (params = {}) => api.get("/questions", { params });
+export const getQuestionById = (id) => api.get(`/questions/${id}`);
 
 // Piston API configuration
 const PISTON_API_URL = "https://emkc.org/api/v2/piston";
@@ -64,8 +76,6 @@ if __name__ == "__main__":
         result = []
     
     sys.stdout.write(json.dumps(result, separators=(',',':')))`;
-
-
 
 // Get file extension for language
 const getExtension = (language) => {
