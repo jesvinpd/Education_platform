@@ -13,15 +13,22 @@ const Signup = () => {
     e.preventDefault();
     setLoading(true);
     try {
+      const res = await axios.post("http://localhost:5000/api/auth/signup", {
+      email,
+      password,
+    });
+
+    // Save token in localStorage
+    localStorage.setItem("token", res.data.token);
       // Add your signup logic here
       console.log("Signing up...", { email, password });
       navigate("/dashboard"); // Redirect after signup
     } catch (err) {
-      setError("Registration failed. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
+    setError(err.response?.data?.message || "Registration failed. Please try again.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="auth-container">
