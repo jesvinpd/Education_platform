@@ -4,6 +4,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 
+const authRoutes = require("./routes/auth");
 const questionRoutes = require('./routes/questionRoutes');
 const submissionRoutes = require('./routes/submissionRoutes');
 const userStatRoutes = require('./routes/userStatRoutes');
@@ -40,6 +41,7 @@ app.use('/api/questions', questionRoutes);
 app.use('/api/submissions', submissionRoutes);
 app.use('/api/userStats', userStatRoutes);
 
+app.use("/api/auth", authRoutes);
 // ----------------------
 // MongoDB Connection
 // ----------------------
