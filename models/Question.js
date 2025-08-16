@@ -1,33 +1,40 @@
 const mongoose = require("mongoose");
 
 const questionSchema = new mongoose.Schema({
-   questionNumber: {
+  questionNumber: {
     type: Number,
-    unique: true
+    unique: true,
   },
   title: String,
   description: String,
-  difficultyLevel: { type: String, enum: ['Easy', 'Medium', 'Hard'] },
-   languages: {
-    c: { type: String, default: "" },      // Boilerplate for C
-    cpp: { type: String, default: "" },    // Boilerplate for C++
-    java: { type: String, default: "" },   // Boilerplate for Java
-    python: { type: String, default: "" }  // Boilerplate for Python ✅
+  difficultyLevel: { type: String, enum: ["Easy", "Medium", "Hard"] },
+  languages: {
+    c: { type: String, default: "" }, // Boilerplate for C
+    cpp: { type: String, default: "" }, // Boilerplate for C++
+    java: { type: String, default: "" }, // Boilerplate for Java
+    python: { type: String, default: "" }, // Boilerplate for Python ✅
   },
- topics : [String],
+  boilerPlates: {
+    c: { type: String, default: "" }, // Boilerplate for C
+    cpp: { type: String, default: "" }, // Boilerplate for C++
+    java: { type: String, default: "" }, // Boilerplate for Java
+    python: { type: String, default: "" }, // Boilerplate for Python ✅
+  },
+  topics: [String],
   totalSubmissions: { type: Number, default: 0 },
   successfulSubmissions: { type: Number, default: 0 },
-   testCases: [
+  testCases: [
     {
       input: String,
       expectedOutput: String,
-      hidden: { type: Boolean, default: false }
-    }],
-    examples: [
+      hidden: { type: Boolean, default: false },
+    },
+  ],
+  examples: [
     {
       input: String,
-      output: String
-    }
+      output: String,
+    },
   ],
 
   // ✅ Add constraints (array of strings or single string)
@@ -37,8 +44,8 @@ const questionSchema = new mongoose.Schema({
   hints: [String], // e.g., ["Try using a hash map", "Think about sorting first"]
   image: {
     type: String, // URL to image
-    default: null
-  }
+    default: null,
+  },
 });
 // Auto-generate questionNumber before saving
 questionSchema.pre("save", async function (next) {

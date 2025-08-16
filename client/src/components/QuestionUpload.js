@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Editor from '@monaco-editor/react';
 import './css/QuestionUpload.css';
 import { createQuestion } from '../services/api';
@@ -28,9 +28,27 @@ const QuestionUpload = () => {
     python: ''
   });
 
+  // ✅ Add boilerPlates state
+  const [boilerPlates, setBoilerPlates] = useState({
+    c: '',
+    cpp: '',
+    java: '',
+    python: ''
+  });
+
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+
+  // ✅ Check for JWT token on component mount
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setMessage('You must be logged in to upload questions');
+      // Optionally redirect to login page
+      // window.location.href = '/login';
+    }
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -79,6 +97,14 @@ const QuestionUpload = () => {
     }));
   };
 
+  // ✅ Add boilerPlate handler
+  const handleBoilerPlateChange = (language, value) => {
+    setBoilerPlates(prev => ({
+      ...prev,
+      [language]: value
+    }));
+  };
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -90,6 +116,14 @@ const QuestionUpload = () => {
     e.preventDefault();
     setLoading(true);
     setMessage('');
+
+    // ✅ Check JWT token before submission
+    const token = localStorage.getItem('token');
+    if (!token) {
+      setMessage('You must be logged in to upload questions');
+      setLoading(false);
+      return;
+    }
 
     try {
       // Prepare form data
@@ -116,6 +150,9 @@ const QuestionUpload = () => {
       // Add code templates
       formData.append('languages', JSON.stringify(codeTemplates));
       
+      // ✅ Add boilerPlates
+      formData.append('boilerPlates', JSON.stringify(boilerPlates));
+      
       // Add image if exists
       if (image) {
         formData.append('image', image);
@@ -137,8 +174,9 @@ const QuestionUpload = () => {
       setExamples([{ input: '', output: '' }]);
       setTestCases([{ input: '', expectedOutput: '', hidden: false }]);
       setCodeTemplates({ c: '', cpp: '', java: '', python: '' });
+      setBoilerPlates({ c: '', cpp: '', java: '', python: '' });
       setImage(null);
-      console.log("hello")
+      
     } catch (error) {
       console.error('Error creating question:', error);
       setMessage('Error creating question. Please try again.');
@@ -329,12 +367,12 @@ const QuestionUpload = () => {
 
         {/* Code Templates Section */}
         <div className="form-section">
-          <h2>Code Templates</h2>
+          <h2>Code Templates (Function Definitions)</h2>
           
           <div className="code-templates">
             {Object.entries(codeTemplates).map(([language, code]) => (
               <div key={language} className="code-template">
-                <h3>{language.toUpperCase()} Template</h3>
+                <h3>{language.toUpperCase()} Function Template</h3>
                 <div className="monaco-editor-container">
                   <Editor
                     height="200px"
@@ -349,6 +387,39 @@ const QuestionUpload = () => {
                       scrollBeyondLastLine: false,
                       automaticLayout: true,
                     }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ✅ Boilerplate Code Section */}
+        <div className="form-section">
+          <h2>Boilerplate Code (Background Code)</h2>
+          <p className="section-description">
+            Add imports, helper functions, and background code that will run with the user's solution
+          </p>
+          
+          <div className="code-templates">
+            {Object.entries(boilerPlates).map(([language, code]) => (
+              <div key={language} className="code-template">
+                <h3>{language.toUpperCase()} Boilerplate Code</h3>
+                <div className="monaco-editor-container">
+                  <Editor
+                    height="250px"
+                    language={language === 'cpp' ? 'cpp' : language}
+                    value={code}
+                    onChange={(value) => handleBoilerPlateChange(language, value || '')}
+                    theme="vs-dark"
+                    options={{
+                      minimap: { enabled: false },
+                      fontSize: 14,
+                      lineNumbers: 'on',
+                      scrollBeyondLastLine: false,
+                      automaticLayout: true,
+                    }}
+                    placeholder={`// Add imports, helper functions, and background code for ${language.toUpperCase()}`}
                   />
                 </div>
               </div>

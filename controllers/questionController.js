@@ -12,25 +12,26 @@ exports.createQuestion = async (req, res) => {
       examples,
       constraints,
       hints,
-      languages
-<<<<<<< HEAD
-    } = req.body; 
+      languages,
+      boilerPlates  // ✅ Add boilerPlates
+    } = req.body;
 
     let imageUrl = null;
 
-    // Parse JSON strings if they exist
+    // Parse JSON strings if they exist (from FormData)
     const parsedTopics = topics ? JSON.parse(topics) : [];
     const parsedTestCases = testCases ? JSON.parse(testCases) : [];
     const parsedExamples = examples ? JSON.parse(examples) : [];
     const parsedConstraints = constraints ? JSON.parse(constraints) : [];
     const parsedHints = hints ? JSON.parse(hints) : [];
     const parsedLanguages = languages ? JSON.parse(languages) : {};
+    const parsedBoilerPlates = boilerPlates ? JSON.parse(boilerPlates) : {}; // ✅ Parse boilerPlates
 
-    // ✅ Upload directly to Cloudinary if file exists
+    // ✅ Handle Cloudinary upload if image exists
     if (req.file) {
       console.log("📸 Uploading image to Cloudinary...");
-      const uploadResult = await new Promise((resolve, reject) => {
-        cloudinary.uploader.upload_stream(
+      imageUrl = await new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
           { folder: "questions" },
           (error, result) => {
             if (error) {
@@ -38,49 +39,27 @@ exports.createQuestion = async (req, res) => {
               reject(error);
             } else {
               console.log("✅ Image uploaded successfully:", result.secure_url);
-              resolve(result);
+              resolve(result.secure_url);
             }
-          }
-        ).end(req.file.buffer);
-      });
-
-      imageUrl = uploadResult.secure_url;
-    }
-
-    // Save question to database (this happens whether there's an image or not)
-=======
-    } = req.body;
-
-    let imageUrl = null;
-
-    // ✅ Handle Cloudinary upload if image exists
-    if (req.file) {
-      imageUrl = await new Promise((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream(
-          { folder: "questions" },
-          (error, result) => {
-            if (error) return reject(error);
-            resolve(result.secure_url);
           }
         );
         stream.end(req.file.buffer);
       });
     }
 
-    // ✅ Create question
->>>>>>> d4a8ee8a69840a7bfa993b7239b620d77f9ad50f
+    // ✅ Create question with parsed data
     const question = new Question({
       title,
       description,
       difficultyLevel,
-<<<<<<< HEAD
       topics: parsedTopics,
       testCases: parsedTestCases,
       examples: parsedExamples,
       constraints: parsedConstraints,
       hints: parsedHints,
       languages: parsedLanguages,
-      image: imageUrl // This will be the Cloudinary URL or null
+      boilerPlates: parsedBoilerPlates, // ✅ Add boilerPlates
+      image: imageUrl
     });
 
     const savedQuestion = await question.save();
@@ -98,23 +77,6 @@ exports.createQuestion = async (req, res) => {
       message: "Failed to create question", 
       error: err.message 
     });
-=======
-      topics,
-      testCases,
-      examples,
-      constraints,
-      hints,
-      languages,
-      image: imageUrl
-    });
-
-    await question.save(); // triggers questionNumber + boilerplate defaults
-
-    res.status(201).json(question);
-  } catch (err) {
-    console.error("Error creating question:", err);
-    res.status(500).json({ msg: "Server error" });
->>>>>>> d4a8ee8a69840a7bfa993b7239b620d77f9ad50f
   }
 };
 
