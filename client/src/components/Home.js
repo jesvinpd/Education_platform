@@ -1,17 +1,26 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AIAssistant from "./AIAssistant";
+import RoleSelection from "./RoleSelection";
 import "./css/Home.css";
+
 
 const Home = () => {
   const navigate = useNavigate();
+  const [showRoleSelection, setShowRoleSelection] = useState(false);
   const [showAssistant, setShowAssistant] = useState(false);
-    const handleChatbotBtnClick = () => {
-      setShowAssistant((prev) => !prev); // Toggle the assistant
-    };
+  
+  const handleChatbotBtnClick = () => {
+    setShowAssistant((prev) => !prev); // Toggle the assistant
+  };
 
   return (
     <div className="home-root">
+      {/* Role Selection Modal - appears when showRoleSelection is true */}
+      {showRoleSelection && (
+        <RoleSelection onClose={() => setShowRoleSelection(false)} />
+      )}
+
       {/* Header */}
       <header className="home-header">
         <div className="logo">Friend of Engineer</div>
@@ -42,7 +51,7 @@ const Home = () => {
           <div className="hero-btns">
             <button
               className="get-started-btn"
-              onClick={() => navigate("/dashboard")}
+              onClick={() => setShowRoleSelection(true)}
             >
               Get Started
             </button>

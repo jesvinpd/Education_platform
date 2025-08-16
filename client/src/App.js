@@ -6,6 +6,13 @@ import Problem from "./components/dashboard/Problem";
 import QuestionUpload from "./components/QuestionUpload";
 import codingProblems from "./dummyData";
 import PracticeSection from "./components/dashboard/PracticeSection";
+import AdminSignup from "./AdminSignup";
+
+
+// ✅ Import from src directly (not components)
+import Login from "./Login";
+import Signup from "./Signup";
+import AdminLogin from "./AdminLogin";  
 
 // Lazy load remote components
 const NotesApp = lazy(() => import("notesApp/NotesApp"));
@@ -15,6 +22,13 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
+        
+        {/* Auth routes */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+       <Route path="/admin/login" element={<AdminLogin />} />
+<Route path="/admin/signup" element={<AdminSignup />} />
+        
         <Route path="/question-upload" element={<QuestionUpload />} />
         <Route path="/dashboard" element={<DashBoard />}>
           <Route index element={<div>Dashboard Content</div>} />
