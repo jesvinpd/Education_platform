@@ -1,35 +1,67 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+<<<<<<< HEAD
 import axios from "axios";
 import "./Auth.css"; // Shared CSS
 
+=======
+import "./Auth.css";
+import axios from "axios";
+>>>>>>> 595e006cee6bd069738b1955eab76401954f2c5f
 const Signup = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    username: '',
+    email: "",
+    password: "",
+    confirmPassword: ""
+  });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    try {
-      const res = await axios.post("http://localhost:5000/api/auth/signup", {
-      email,
-      password,
-    });
+    
+    // Clear previous errors
+    setError("");
+    
+    // Validate passwords match
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
 
-    // Save token in localStorage
-    localStorage.setItem("token", res.data.token);
-      // Add your signup logic here
-      console.log("Signing up...", { email, password });
-      navigate("/dashboard"); // Redirect after signup
+    // Validate password length
+    if (formData.password.length < 8) {
+      setError("Password must be at least 8 characters");
+      return;
+    }
+
+    setLoading(true);
+     try {
+        const res = await axios.post("http://localhost:5000/api/auth/signup", {
+          name: formData.username,   // ✅ backend expects "name"
+          email: formData.email,
+          password: formData.password,
+          role: "st"              // ✅ explicitly set admin role
+        });
+      // Here you would typically make an API call
+      // For now, we'll just log and redirect
+      console.log("Signing up...", formData);
+      navigate("/dashboard");
     } catch (err) {
-    setError(err.response?.data?.message || "Registration failed. Please try again.");
-  } finally {
-    setLoading(false);
-  }
-};
+      setError(err.message || "Registration failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="auth-container">
@@ -41,13 +73,28 @@ const Signup = () => {
 
         <form onSubmit={handleSubmit}>
           <div className="input-group">
+            <label>Username</label>
+            <input
+              type="text"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              placeholder="Choose a username"
+              required
+              autoComplete="username"
+            />
+          </div>
+
+          <div className="input-group">
             <label>Email</label>
             <input
               type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
               placeholder="Enter your email"
               required
+              autoComplete="email"
             />
           </div>
 
@@ -55,16 +102,39 @@ const Signup = () => {
             <label>Password</label>
             <input
               type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
               placeholder="•••••••• (min 8 characters)"
               minLength="8"
               required
+              autoComplete="new-password"
+            />
+          </div>
+
+          <div className="input-group">
+            <label>Confirm Password</label>
+            <input
+              type="password"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              placeholder="Confirm your password"
+              minLength="8"
+              required
+              autoComplete="new-password"
             />
           </div>
 
           <button type="submit" disabled={loading}>
-            {loading ? "Creating account..." : "Sign Up"}
+            {loading ? (
+              <>
+                <span className="spinner"></span>
+                Creating account...
+              </>
+            ) : (
+              "Sign Up"
+            )}
           </button>
         </form>
 

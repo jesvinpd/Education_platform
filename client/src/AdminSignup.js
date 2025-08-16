@@ -5,8 +5,10 @@ import './AdminAuth.css';
 
 const AdminSignup = () => {
   const [formData, setFormData] = useState({
+    username: '',
     email: '',
-    password: ''
+    password: '',
+    confirmPassword: ''
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -20,56 +22,56 @@ const AdminSignup = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
+  e.preventDefault();
+  setError("");
 
-    try {
-      const response = await axios.post(
-        'http://localhost:5000/api/admin/signup', 
-        {
-          email: formData.email,
-          password: formData.password
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        }
-      );
-      
-      if (response.data.success) {
-        alert('Admin account created successfully! Please login.');
-        navigate('/admin/login');
-      } else {
-        setError(response.data.message || 'Signup failed');
-      }
-    } catch (err) {
-      console.error('Signup error:', err);
-      
-      if (err.response) {
-        setError(err.response.data.message || 
-                err.response.data.error || 
-                'Signup failed. Please try again.');
-      } else if (err.request) {
-        setError('No response from server. Please try again.');
-      } else {
-        setError('An unexpected error occurred.');
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
+  if (formData.password !== formData.confirmPassword) {
+    setError("Passwords do not match");
+    return;
+  }
+
+  setLoading(true);
+
+  try {
+    const res = await axios.post("http://localhost:5000/api/auth/signup", {
+      name: formData.username,   // ✅ backend expects "name"
+      email: formData.email,
+      password: formData.password,
+      role: "admin"              // ✅ explicitly set admin role
+    });
+
+    alert("Admin account created successfully!");
+    navigate("/admin/login");
+  } catch (err) {
+    console.error("Signup error:", error.message);
+    setError(err.response?.data?.msg || "Signup failed");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="admin-auth-container">
       <div className="auth-card">
         <h2>Admin Signup</h2>
         <p className="subtitle">Create a new admin account</p>
-        
+
         {error && <div className="error-message">{error}</div>}
 
         <form onSubmit={handleSubmit}>
+          <div className="input-group">
+            <label>Username</label>
+            <input
+              type="text"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              required
+              placeholder="Enter username"
+              autoComplete="username"
+            />
+          </div>
+
           <div className="input-group">
             <label>Email</label>
             <input
@@ -93,6 +95,20 @@ const AdminSignup = () => {
               required
               minLength="8"
               placeholder="Create password (min 8 characters)"
+              autoComplete="new-password"
+            />
+          </div>
+
+          <div className="input-group">
+            <label>Confirm Password</label>
+            <input
+              type="password"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              required
+              minLength="8"
+              placeholder="Confirm your password"
               autoComplete="new-password"
             />
           </div>

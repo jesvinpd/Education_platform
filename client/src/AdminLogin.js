@@ -26,7 +26,7 @@ function AdminLogin() {
     
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/admin/login",
+        "http://localhost:5000/api/auth/login",
         {
           email: formData.email,
           password: formData.password
@@ -38,7 +38,7 @@ function AdminLogin() {
         }
       );
 
-      if (response.data.success) {
+     if (response.data.token) {
         localStorage.setItem("token", response.data.token);
         navigate("/dashboard");
       } else {
