@@ -1,13 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-<<<<<<< HEAD
-import axios from "axios";
-import "./Auth.css"; // Shared CSS
-
-=======
 import "./Auth.css";
 import axios from "axios";
->>>>>>> 595e006cee6bd069738b1955eab76401954f2c5f
 const Signup = () => {
   const [formData, setFormData] = useState({
     username: '',

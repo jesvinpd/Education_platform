@@ -13,15 +13,9 @@
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
     "@uiw/react-codemirror": "^4.23.13",
-<<<<<<< HEAD
-    "axios": "^1.11.0",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-=======
     "axios": "^1.9.0",
     "react": "^18.2.0",
   "react-dom": "^18.2.0",
->>>>>>> 595e006cee6bd069738b1955eab76401954f2c5f
     "react-markdown": "^10.1.0",
     "react-router-dom": "^7.6.2",
     "react-scripts": "5.0.1",
