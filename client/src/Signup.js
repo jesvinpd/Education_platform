@@ -1,19 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-<<<<<<< HEAD
 import "./Auth.css";
 import axios from "axios";
-=======
-import axios from "axios";
-import "./Auth.css"; 
->>>>>>> f5c1ae6e13660421dd18891b67096167a040129e
 const Signup = () => {
   const [formData, setFormData] = useState({
-    username: "",
-    email: "",
+    username: '',
+    email: "",  
     password: "",
-    confirmPassword: "",
-    role: "student" // default role
+    confirmPassword: "" 
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -28,8 +22,10 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Clear previous errors
     setError("");
-
+    
     // Validate passwords match
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
@@ -43,29 +39,19 @@ const Signup = () => {
     }
 
     setLoading(true);
-    try {
-      const res = await axios.post("http://localhost:5000/api/auth/signup", {
-        name: formData.username,   // ✅ backend expects "name"
-        email: formData.email,
-        password: formData.password,
-        role: formData.role
-      });
-
-      // ✅ Save token in localStorage
-      localStorage.setItem("token", res.data.token);
-
-      // Redirect to dashboard
+     try {
+        const res = await axios.post("http://localhost:5000/api/auth/signup", {
+          name: formData.username,   // ✅ backend expects "name"
+          email: formData.email,
+          password: formData.password,
+          role: "student"              // ✅ explicitly set admin role
+        });
+      // Here you would typically make an API call
+      // For now, we'll just log and redirect
+      console.log("Signing up...", formData);
       navigate("/dashboard");
     } catch (err) {
-      console.error("Signup error:", err);
-      if (err.response?.data?.msg) {
-        setError(err.response.data.msg);
-      } else if (err.response?.data?.errors) {
-        // express-validator errors
-        setError(err.response.data.errors[0].msg);
-      } else {
-        setError("Registration failed. Please try again.");
-      }
+      setError(err.message || "Registration failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -76,7 +62,7 @@ const Signup = () => {
       <div className="auth-card">
         <h2>Create Account</h2>
         <p className="subtitle">Start your learning journey</p>
-
+        
         {error && <div className="error-message">{error}</div>}
 
         <form onSubmit={handleSubmit}>
@@ -132,32 +118,6 @@ const Signup = () => {
               required
               autoComplete="new-password"
             />
-          </div>
-
-          <div className="input-group radio-group">
-            <label>I am a:</label>
-            <div className="radio-options">
-              <label>
-                <input
-                  type="radio"
-                  name="role"
-                  value="student"
-                  checked={formData.role === "student"}
-                  onChange={handleChange}
-                />
-                Student
-              </label>
-              <label>
-                <input
-                  type="radio"
-                  name="role"
-                  value="teacher"
-                  checked={formData.role === "teacher"}
-                  onChange={handleChange}
-                />
-                Teacher
-              </label>
-            </div>
           </div>
 
           <button type="submit" disabled={loading}>
