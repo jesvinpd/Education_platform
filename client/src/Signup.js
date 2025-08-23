@@ -1,19 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-<<<<<<< HEAD
+import axios from "axios";
 import "./Auth.css";
-import axios from "axios";
-=======
-import axios from "axios";
-import "./Auth.css"; 
->>>>>>> f5c1ae6e13660421dd18891b67096167a040129e
+
 const Signup = () => {
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
     confirmPassword: "",
-    role: "student" // default role
+    role: "student", // default role
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -22,7 +18,7 @@ const Signup = () => {
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -30,13 +26,11 @@ const Signup = () => {
     e.preventDefault();
     setError("");
 
-    // Validate passwords match
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
       return;
     }
 
-    // Validate password length
     if (formData.password.length < 8) {
       setError("Password must be at least 8 characters");
       return;
@@ -45,23 +39,19 @@ const Signup = () => {
     setLoading(true);
     try {
       const res = await axios.post("http://localhost:5000/api/auth/signup", {
-        name: formData.username,   // ✅ backend expects "name"
+        name: formData.username, // backend expects "name"
         email: formData.email,
         password: formData.password,
-        role: formData.role
+        role: formData.role,
       });
 
-      // ✅ Save token in localStorage
       localStorage.setItem("token", res.data.token);
-
-      // Redirect to dashboard
       navigate("/dashboard");
     } catch (err) {
       console.error("Signup error:", err);
       if (err.response?.data?.msg) {
         setError(err.response.data.msg);
       } else if (err.response?.data?.errors) {
-        // express-validator errors
         setError(err.response.data.errors[0].msg);
       } else {
         setError("Registration failed. Please try again.");
