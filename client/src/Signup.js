@@ -1,13 +1,24 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+<<<<<<< HEAD
 import "./Auth.css";
 import axios from "axios";
+=======
+import axios from "axios";
+import "./Auth.css";
+
+>>>>>>> 8cb883cbea39b3cdc5b444f2e73f27b502a223a7
 const Signup = () => {
   const [formData, setFormData] = useState({
     username: '',
     email: "",  
     password: "",
+<<<<<<< HEAD
     confirmPassword: "" 
+=======
+    confirmPassword: "",
+    role: "student", // default role
+>>>>>>> 8cb883cbea39b3cdc5b444f2e73f27b502a223a7
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -16,7 +27,7 @@ const Signup = () => {
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -25,20 +36,24 @@ const Signup = () => {
     
     // Clear previous errors
     setError("");
+<<<<<<< HEAD
     
     // Validate passwords match
+=======
+
+>>>>>>> 8cb883cbea39b3cdc5b444f2e73f27b502a223a7
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
       return;
     }
 
-    // Validate password length
     if (formData.password.length < 8) {
       setError("Password must be at least 8 characters");
       return;
     }
 
     setLoading(true);
+<<<<<<< HEAD
      try {
         const res = await axios.post("http://localhost:5000/api/auth/signup", {
           name: formData.username,   // ✅ backend expects "name"
@@ -52,6 +67,27 @@ const Signup = () => {
       navigate("/dashboard");
     } catch (err) {
       setError(err.message || "Registration failed. Please try again.");
+=======
+    try {
+      const res = await axios.post("http://localhost:5000/api/auth/signup", {
+        name: formData.username, // backend expects "name"
+        email: formData.email,
+        password: formData.password,
+        role: formData.role,
+      });
+
+      localStorage.setItem("token", res.data.token);
+      navigate("/dashboard");
+    } catch (err) {
+      console.error("Signup error:", err);
+      if (err.response?.data?.msg) {
+        setError(err.response.data.msg);
+      } else if (err.response?.data?.errors) {
+        setError(err.response.data.errors[0].msg);
+      } else {
+        setError("Registration failed. Please try again.");
+      }
+>>>>>>> 8cb883cbea39b3cdc5b444f2e73f27b502a223a7
     } finally {
       setLoading(false);
     }
