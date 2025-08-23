@@ -1,24 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-<<<<<<< HEAD
-import "./Auth.css";
-import axios from "axios";
-=======
 import axios from "axios";
 import "./Auth.css";
 
->>>>>>> 8cb883cbea39b3cdc5b444f2e73f27b502a223a7
 const Signup = () => {
   const [formData, setFormData] = useState({
     username: '',
     email: "",  
     password: "",
-<<<<<<< HEAD
-    confirmPassword: "" 
-=======
     confirmPassword: "",
     role: "student", // default role
->>>>>>> 8cb883cbea39b3cdc5b444f2e73f27b502a223a7
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -36,12 +27,6 @@ const Signup = () => {
     
     // Clear previous errors
     setError("");
-<<<<<<< HEAD
-    
-    // Validate passwords match
-=======
-
->>>>>>> 8cb883cbea39b3cdc5b444f2e73f27b502a223a7
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
       return;
@@ -53,21 +38,6 @@ const Signup = () => {
     }
 
     setLoading(true);
-<<<<<<< HEAD
-     try {
-        const res = await axios.post("http://localhost:5000/api/auth/signup", {
-          name: formData.username,   // ✅ backend expects "name"
-          email: formData.email,
-          password: formData.password,
-          role: "student"              // ✅ explicitly set admin role
-        });
-      // Here you would typically make an API call
-      // For now, we'll just log and redirect
-      console.log("Signing up...", formData);
-      navigate("/dashboard");
-    } catch (err) {
-      setError(err.message || "Registration failed. Please try again.");
-=======
     try {
       const res = await axios.post("http://localhost:5000/api/auth/signup", {
         name: formData.username, // backend expects "name"
@@ -87,7 +57,6 @@ const Signup = () => {
       } else {
         setError("Registration failed. Please try again.");
       }
->>>>>>> 8cb883cbea39b3cdc5b444f2e73f27b502a223a7
     } finally {
       setLoading(false);
     }
