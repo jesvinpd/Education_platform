@@ -13,11 +13,6 @@
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^13.5.0",
     "@uiw/react-codemirror": "^4.23.13",
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 8cb883cbea39b3cdc5b444f2e73f27b502a223a7
     "axios": "^1.9.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

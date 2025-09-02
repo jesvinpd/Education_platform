@@ -40,6 +40,18 @@ const QuestionUpload = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
 
+  // ✅ Auto-hide message after 2 seconds
+  useEffect(() => {
+    if (message) {
+      const timer = setTimeout(() => {
+        setMessage('');
+      }, 2000);
+
+      // Cleanup timer if component unmounts or message changes
+      return () => clearTimeout(timer);
+    }
+  }, [message]);
+
   // ✅ Check for JWT token on component mount
   useEffect(() => {
     const token = localStorage.getItem('token');

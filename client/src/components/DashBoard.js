@@ -22,7 +22,7 @@ const DashBoard = () => {
     sessionStorage.clear();
 
     // Redirect to login/signup page
-    navigate("/login");
+    navigate("/");
   };
 
   return (
