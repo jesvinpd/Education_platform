@@ -25,7 +25,7 @@ function AdminLogin() {
     setLoading(true);
     
     try {
-      const response = await axios.post(
+      const res = await axios.post(
         "http://localhost:5000/api/auth/login",
         {
           email: formData.email,
@@ -38,21 +38,26 @@ function AdminLogin() {
         }
       );
 
-     if (response.data.token) {
-        localStorage.setItem("token", response.data.token);
+      if (res.data.token) {
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("role", res.data.role);
+
+      // ✅ Role-based navigation
+      if (res.data.role === "admin") {
         navigate("/dashboard");
       } else {
-        setError(response.data.message || "Login failed");
+        console.error("Login error: Unauthorized role");
       }
-    } catch (err) {
-      setError(
-        err.response?.data?.message || 
-        "Login failed. Please try again."
-      );
-    } finally {
-      setLoading(false);
+    } else {
+      setError("Login failed: No token received.");
     }
-  };
+  } catch (err) {
+    console.error("Login error:", err);
+    setError("Invalid email or password");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="admin-auth-container">

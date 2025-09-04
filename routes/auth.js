@@ -52,7 +52,7 @@ router.post("/login", [
     if (!isMatch) return res.status(400).json({ msg: "Invalid credentials" });
 
     const token = jwt.sign({ id: user.id, role: user.role }, JWT_SECRET, { expiresIn: "1h" });
-    res.json({ token });
+    res.json({ token , role: user.role});
   } catch (err) {
     res.status(500).send("Server error");
   }
