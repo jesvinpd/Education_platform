@@ -7,7 +7,10 @@ import { testConnection, runTestCases } from '../../services/api';
 
 const CodePanel = ({ problem, testResults, setTestResults, onRunCode }) => {
   const [language] = useState('python'); // Fixed to Python only
-  const [code, setCode] = useState(problem.code.python); // Default to Python
+  const [code, setCode] = useState(
+  problem?.code?.python || "def solution(nums, target):\n    # Write your code here\n    pass"
+);
+
   const [activeTestCase, setActiveTestCase] = useState('Case 1');
   const [customTestCases, setCustomTestCases] = useState([]);
   const [loading, setLoading] = useState(false);
