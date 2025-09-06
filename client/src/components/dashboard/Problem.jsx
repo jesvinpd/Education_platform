@@ -115,7 +115,19 @@ const Problem = () => {
             </>
           ) : (
             <div className="hints">
-              <ReactMarkdown>{problem.hint || "No hints available."}</ReactMarkdown>
+              {problem.hints && Array.isArray(problem.hints) && problem.hints.length > 0 ? (
+                <>
+                  <ol>
+                    {problem.hints.map((hint, index) => (
+                      <li key={index}>
+                        <ReactMarkdown>{hint}</ReactMarkdown>
+                      </li>
+                    ))}
+                  </ol>
+                </>
+              ) : (
+                <p>No hints available.</p>
+              )}
             </div>
           )}
         </div>

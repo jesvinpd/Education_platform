@@ -74,9 +74,9 @@ const PracticeSection = () => {
             <div className="problem-cell">
               <span 
                 className="difficulty-badge"
-                style={getDifficultyStyle(problem.difficulty)}
+                style={getDifficultyStyle(problem.difficultyLevel)}
               >
-                {problem.difficulty}
+                {problem.difficultyLevel}
               </span>
             </div>
           </div>
