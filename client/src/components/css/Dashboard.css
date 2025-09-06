@@ -85,3 +85,116 @@
   min-height: 500px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+/* Back Arrow Styles */
+.back-arrow {
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+  margin-right: 12px;
+  color: #333;
+  transition: all 0.3s ease;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  position: relative;
+  overflow: hidden;
+}
+
+.back-arrow:hover {
+  color: #007bff;
+  background-color: rgba(0, 123, 255, 0.1);
+  transform: translateX(-3px);
+}
+
+.back-arrow:active {
+  transform: translateX(-3px) scale(0.95);
+}
+
+/* Alternative Style 1: Circle background */
+.back-arrow.circle {
+  background-color: #f8f9fa;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.back-arrow.circle:hover {
+  background-color: #007bff;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+/* Alternative Style 2: Minimal outline */
+.back-arrow.outline {
+  border: 2px solid #e9ecef;
+  background: transparent;
+}
+
+.back-arrow.outline:hover {
+  border-color: #007bff;
+  background-color: rgba(0, 123, 255, 0.05);
+}
+
+/* Alternative Style 3: Gradient background */
+.back-arrow.gradient {
+  background: linear-gradient(135deg, #6c757d 0%, #adb5bd 100%);
+  color: white;
+}
+
+.back-arrow.gradient:hover {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
+}
+
+/* Animation Style */
+.back-arrow.animate:hover {
+  animation: arrowBounce 0.6s ease;
+}
+
+@keyframes arrowBounce {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-5px); }
+}
+
+/* Pulse effect on hover */
+.back-arrow.pulse:hover {
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(0, 123, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0); }
+}
+
+/* 3D effect */
+.back-arrow.three-d {
+  box-shadow: 0 4px 0 #dcdcdc;
+  transform: translateY(0);
+  transition: all 0.2s ease;
+}
+
+.back-arrow.three-d:hover {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #dcdcdc;
+}
+
+.back-arrow.three-d:active {
+  transform: translateY(4px);
+  box-shadow: 0 0 0 #dcdcdc;
+}
+
+/* Modern style with subtle background */
+.back-arrow.modern {
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.back-arrow.modern:hover {
+  background-color: rgba(0, 123, 255, 0.1);
+  backdrop-filter: blur(6px);
+  box-shadow: 0 6px 20px rgba(0, 123, 255, 0.15);
+}

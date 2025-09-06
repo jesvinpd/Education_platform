@@ -17,12 +17,11 @@ const DashBoard = () => {
   };
 
   const handleLogout = () => {
-    // Clear auth/session (adjust depending on your setup)
     localStorage.removeItem("token");
     sessionStorage.clear();
 
-    // Redirect to login/signup page
-    navigate("/");
+    // Go to Home.js
+    navigate("/", { replace: true });
   };
 
   return (
@@ -63,7 +62,7 @@ const DashBoard = () => {
             <span>Practice</span>
           </div>
 
-          {/* 🔹 New Logout option */}
+          {/* 🔹 Logout option */}
           <div
             className="sidenav-option"
             onClick={() => handleOptionClick("logout")}
@@ -79,6 +78,14 @@ const DashBoard = () => {
       {/* Main Content */}
       <div className="dashboard-content">
         <div className="dashboard-header">
+          {/* 🔹 Back Arrow button */}
+          <button
+            className="back-arrow"
+            onClick={() => navigate("/", { replace: true })}
+          >
+            ←
+          </button>
+
           {activeOption !== "notes" && activeOption !== "logout" && <h1>{activeOption}</h1>}
         </div>
         <div className="dashboard-main">
@@ -90,3 +97,4 @@ const DashBoard = () => {
 };
 
 export default DashBoard;
+
