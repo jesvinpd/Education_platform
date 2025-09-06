@@ -8,6 +8,8 @@ import codingProblems from "./dummyData";
 import PracticeSection from "./components/dashboard/PracticeSection";
 import AdminSignup from "./AdminSignup";
 import PrivateRoute from "./components/PrivateRoute";
+import AIAssistant from './components/AIAssistant';
+
 
 // ✅ Import from src directly (not components)
 import Login from "./Login";
@@ -22,6 +24,13 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
+          {/* Practice section */}
+        <Route
+          path="/practice"
+          element={<PracticeSection problems={codingProblems} />}
+        />
+         <Route path="/ai-assistant" element={<AIAssistant />} />
+
         
         {/* Auth routes */}
         <Route path="/login" element={<Login />} />

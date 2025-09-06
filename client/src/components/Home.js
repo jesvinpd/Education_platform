@@ -1,19 +1,59 @@
-import React, { useState } from "react";
+
+ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AIAssistant from "./AIAssistant";
 import RoleSelection from "./RoleSelection";
 import "./css/Home.css";
 
-
 const Home = () => {
   const navigate = useNavigate();
   const [showRoleSelection, setShowRoleSelection] = useState(false);
   const [showAssistant, setShowAssistant] = useState(false);
-  
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const handleChatbotBtnClick = () => {
     setShowAssistant((prev) => !prev); // Toggle the assistant
   };
+  const isLoggedIn = () => {
+  // Assuming your token is stored in localStorage
+  return localStorage.getItem("token") !== null;
+};
 
+// Handler for Coding Practice click
+const handleCodingClick = () => {
+  if (isLoggedIn()) {
+    navigate("/practice");
+  } else {
+    alert("Please login to continue!");
+  }
+};
+
+// Handler for AI Assistant click
+const handleAIClick = () => {
+  if (isLoggedIn()) {
+    setShowAssistant(true);
+  } else {
+    alert("Please login to continue!");
+  }
+};
+
+// Toggle profile dropdown
+const toggleProfileDropdown = () => {
+  setShowProfileDropdown(!showProfileDropdown);
+};
+
+// Handle logout
+const handleLogout = () => {
+  localStorage.removeItem("token");
+  setShowProfileDropdown(false);
+  // You might want to redirect to home or refresh the page
+  window.location.reload();
+};
+
+// Handle login
+const handleLogin = () => {
+  setShowProfileDropdown(false);
+  navigate("/login"); // Assuming you have a login route
+};
   return (
     <div className="home-root">
       {/* Role Selection Modal - appears when showRoleSelection is true */}
@@ -29,15 +69,35 @@ const Home = () => {
             Home
           </a>
           <a href="#">Notes</a>
-          <a href="#">Coding</a>
-          <a href="#">Practice</a>
+         
+          <a onClick={() => navigate("/practice")}>Practice</a>
           <a href="#" onClick={() => navigate("/question-upload")}>
             Question Upload
           </a>
         </nav>
-        <button className="sign-in-btn" onClick={() => navigate("/compiler")}>
-          Sign In
-        </button>
+        {/* Profile Icon with Dropdown */}
+<div className="profile-container">
+  <div className="profile-icon" onClick={toggleProfileDropdown}>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 12C14.2091 12 16 10.2091 16 8C16 5.79086 14.2091 4 12 4C9.79086 4 8 5.79086 8 8C8 10.2091 9.79086 12 12 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M20 21C20 19.1435 19.2625 17.363 17.9497 16.0503C16.637 14.7375 14.8565 14 13 14H11C9.14348 14 7.36301 14.7375 6.05025 16.0503C4.7375 17.363 4 19.1435 4 21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+  </div>
+  
+  {showProfileDropdown && (
+    <div className="profile-dropdown">
+      {isLoggedIn() ? (
+        <>
+          <div className="dropdown-item">Profile</div>
+          <div className="dropdown-item" onClick={handleLogout}>Logout</div>
+        </>
+      ) : (
+        <div className="dropdown-item" onClick={handleLogin}>Login to continue</div>
+      )}
+    </div>
+  )}
+</div>
+        
       </header>
 
       {/* Hero Section */}
@@ -90,7 +150,13 @@ const Home = () => {
               across all subjects.
             </p>
           </div>
-          <div className="feature-card coding">
+
+          {/* ✅ Coding Practice Card with navigation */}
+          <div
+  className="feature-card coding"
+  onClick={handleCodingClick}
+  style={{ cursor: "pointer" }}
+>
             <div className="feature-icon coding-icon">
               <svg width="40" height="40" fill="none" viewBox="0 0 24 24">
                 <circle cx="20" cy="20" r="20" fill="#22c55e" />
@@ -108,7 +174,11 @@ const Home = () => {
               LeetCode-style questions.
             </p>
           </div>
-          <div className="feature-card ai">
+<div
+  className="feature-card ai"
+  onClick={handleAIClick}
+  style={{ cursor: "pointer" }}
+>
             <div className="feature-icon ai-icon">
               <svg width="40" height="40" fill="none" viewBox="0 0 24 24">
                 <circle cx="20" cy="20" r="20" fill="#a21caf" />
@@ -330,8 +400,7 @@ print(f"Indices: {result}")`}
         <button className="cta-btn">Get Started for Free</button>
       </section>
 
-      {/* Footer Section */}
-      <footer className="footer-section">
+     <footer className="footer-section">
         <div className="footer-content">
           <div className="footer-col">
             <div className="footer-title">Friend of Engineer</div>
