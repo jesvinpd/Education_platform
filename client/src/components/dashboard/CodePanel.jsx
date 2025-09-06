@@ -8,7 +8,7 @@ import { testConnection, runTestCases } from '../../services/api';
 const CodePanel = ({ problem, testResults, setTestResults, onRunCode }) => {
   const [language] = useState('python'); // Fixed to Python only
   const [code, setCode] = useState(
-  problem?.code?.python || "def solution(nums, target):\n    # Write your code here\n    pass"
+  problem?.languages?.python || "def solution(nums, target):\n    # Write your code here\n    pass"
 );
 
   const [activeTestCase, setActiveTestCase] = useState('Case 1');
@@ -73,8 +73,11 @@ const CodePanel = ({ problem, testResults, setTestResults, onRunCode }) => {
 
       const allTestCases = [...testCases, ...customParsedTestCases];
 
-      // Run all test cases using the new API
-      const results = await runTestCases(code, allTestCases, setTestResults, setLoading);
+      // Get Python boilerplate from problem data
+      const pythonBoilerplate = problem?.boilerPlates?.python || problem?.languages?.python || null;
+
+      // Run all test cases using the new API with boilerplate
+      const results = await runTestCases(code, allTestCases, setTestResults, setLoading, pythonBoilerplate);
       
       console.log('Test results:', results);
       
@@ -128,7 +131,7 @@ const CodePanel = ({ problem, testResults, setTestResults, onRunCode }) => {
         >
           {loading ? 'Running...' : 'Run'}
         </button>
-        <button className="submit-button">Submit</button>
+        <button  className="submit-button">Submit</button>
       </div>
 
       <TestCases 

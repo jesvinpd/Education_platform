@@ -24,7 +24,7 @@ api.interceptors.request.use((config) => {
 // Example API methods
 export const testConnection = () => api.get("/test");
 export const submitCode = (data) => api.post("/submit", data);
-export const getProblems = () => api.get("/problems");
+
 
 // Question API methods
 export const createQuestion = (formData) => {
@@ -49,8 +49,22 @@ const pistonApi = axios.create({
   },
 });
 
-// Python boilerplate template - fixed to handle both class methods and standalone functions
-const PYTHON_BOILERPLATE = `import sys
+// Get file extension for language
+const getExtension = (language) => {
+  switch (language) {
+    case 'python':
+      return 'py';
+    default:
+      return 'py';
+  }
+};
+
+// Execute code using Piston API - now accepts boilerplate as parameter
+export const executeCode = async (sourceCode, testCase, pythonBoilerplate = null) => {
+  try {
+    
+    // Use provided boilerplate or fallback to a simple template
+    const defaultBoilerplate = `import sys
 import json
 from typing import List
 
@@ -67,7 +81,6 @@ if __name__ == "__main__":
     except NameError:
         # If that fails, try creating a Solution instance and calling the method
         try:
-            
             result = twoSum(nums, target)
         except:
             # If both fail, there's an error in the user's code
@@ -77,22 +90,10 @@ if __name__ == "__main__":
     
     sys.stdout.write(json.dumps(result, separators=(',',':')))`;
 
-// Get file extension for language
-const getExtension = (language) => {
-  switch (language) {
-    case 'python':
-      return 'py';
-    default:
-      return 'py';
-  }
-};
-
-// Execute code using Piston API
-export const executeCode = async (sourceCode, testCase) => {
-  try {
+    const boilerplate = pythonBoilerplate || defaultBoilerplate;
     
     // Prepare the code by replacing the placeholder with user code
-    const preparedCode = PYTHON_BOILERPLATE.replace('#{{USER_CODE}}#', sourceCode);
+    const preparedCode = boilerplate.replace('#{{USER_CODE}}#', sourceCode);
     
     // Format input for the test case
     const formattedInput = `${JSON.stringify(testCase.input.nums)}\n${testCase.input.target}`;
@@ -147,15 +148,15 @@ export const executeCode = async (sourceCode, testCase) => {
   }
 };
 
-// Run multiple test cases
-export const runTestCases = async (sourceCode, testCases, setResults, setLoading) => {
+// Run multiple test cases - now accepts boilerplate as parameter
+export const runTestCases = async (sourceCode, testCases, setResults, setLoading, pythonBoilerplate = null) => {
   setLoading(true);
   const newResults = [];
 
   for (let i = 0; i < testCases.length; i++) {
     const testCase = testCases[i];
     try {
-      const result = await executeCode(sourceCode, testCase);
+      const result = await executeCode(sourceCode, testCase, pythonBoilerplate);
       
       newResults.push({
         testCase: i + 1,
