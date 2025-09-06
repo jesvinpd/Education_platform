@@ -124,7 +124,42 @@ const Signup = () => {
               autoComplete="new-password"
             />
           </div>
-
+              {/* ✅ Role selection radio buttons */}
+          <div className="input-group radio-group">
+            <label>I am a:</label>
+            <div className="radio-options">
+              <label>
+                <input
+                  type="radio"
+                  name="role"
+                  value="student"
+                  checked={formData.role === "student"}
+                  onChange={handleChange}
+                />
+                Student
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="role"
+                  value="teacher"
+                  checked={formData.role === "teacher"}
+                  onChange={handleChange}
+                />
+                Teacher
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="role"
+                  value="admin"
+                  checked={formData.role === "admin"}
+                  onChange={handleChange}
+                />
+                Admin
+              </label>
+            </div>
+          </div>
           <button type="submit" disabled={loading}>
             {loading ? (
               <>
